@@ -79,6 +79,20 @@
 .ch-grover { --hue: 195; --chroma: 0.11; }
 .ch-error-correction { --hue: 225; }
 
+/* Accent colours are recomputed wherever a chapter sets its own --hue (custom properties resolve where defined). */
+[class^="ch-"], [class*=" ch-"] {
+  --accent: oklch(0.5 var(--chroma) var(--hue));
+  --accent-strong: oklch(0.42 var(--chroma) var(--hue));
+  --accent-soft: oklch(0.965 0.022 var(--hue));
+  --accent-line: oklch(0.84 0.06 var(--hue));
+}
+:root[data-theme="dark"] [class^="ch-"], :root[data-theme="dark"] [class*=" ch-"] {
+  --accent: oklch(0.78 calc(var(--chroma) * 0.85) var(--hue));
+  --accent-strong: oklch(0.86 calc(var(--chroma) * 0.7) var(--hue));
+  --accent-soft: oklch(0.25 0.035 var(--hue));
+  --accent-line: oklch(0.42 0.06 var(--hue));
+}
+
 /* ------------------------------------------------------------------ base */
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -974,3 +988,60 @@ html:not(.js) figure.demo::after {
 .rep-bit.err { background: var(--k2); color: var(--bg); }
 .rep-verdict { margin-left: 8px; font: 600 0.85rem var(--sans); color: var(--good); }
 .rep-verdict.bad { color: var(--bad); }
+
+/* ------------------------------------------------------------------ theme: interference */
+/* A light, thematic layer: a faint two-source interference pattern at the top of every page, a Bloch
+   sphere in the home hero, kicker labels written as kets, and a superposition gradient on the chain. */
+
+:root {
+  --theme-ring: rgba(118, 104, 170, 0.085);
+  --theme-bloch: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 240'%3E%3Cg fill='none' stroke='%238a84a8' stroke-opacity='.45'%3E%3Ccircle cx='120' cy='120' r='100' stroke-width='1.5'/%3E%3Cellipse cx='120' cy='120' rx='100' ry='30' stroke-dasharray='4 5'/%3E%3Cellipse cx='120' cy='120' rx='34' ry='100' stroke-dasharray='4 5'/%3E%3Cpath d='M120 8V232M8 120H232' stroke-opacity='.3'/%3E%3C/g%3E%3Cpath d='M120 120L182 48' stroke='%23d2553b' stroke-opacity='.7' stroke-width='4' stroke-linecap='round'/%3E%3Ccircle cx='182' cy='48' r='8' fill='%23d2553b' fill-opacity='.75'/%3E%3C/svg%3E");
+}
+:root[data-theme="dark"] { --theme-ring: rgba(190, 176, 240, 0.065); }
+
+main { position: relative; z-index: 0; }
+main::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 400px;
+  z-index: -1;
+  pointer-events: none;
+  /* Two point sources whose rings overlap: the bright and dark fringes of a double slit. */
+  background-image:
+    repeating-radial-gradient(circle at 40% -60px, transparent 0 22px, var(--theme-ring) 22px 23.5px),
+    repeating-radial-gradient(circle at 60% -60px, transparent 0 22px, var(--theme-ring) 22px 23.5px);
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 0%, transparent 100%);
+}
+
+.brand-mark { background: linear-gradient(135deg, oklch(0.5 0.15 292), oklch(0.55 0.11 195)); color: #fff; }
+
+/* The home hero: a Bloch sphere behind the title. */
+.home { position: relative; }
+.home::before {
+  content: "";
+  position: absolute;
+  top: 0.6rem;
+  right: -120px;
+  width: 200px;
+  height: 200px;
+  background: var(--theme-bloch) no-repeat center / contain;
+  pointer-events: none;
+  z-index: -1;
+}
+@media (max-width: 900px) { .home::before { opacity: 0.4; right: 0; width: 160px; height: 160px; } }
+
+/* Kickers written as kets: |CHAPTER 02 · INTERFERENCE⟩. */
+.kicker::before { content: "|"; font-family: var(--mathfont); font-weight: 400; margin-right: 0.15em; }
+.kicker::after { content: "⟩"; font-family: var(--mathfont); font-weight: 400; margin-left: 0.15em; }
+
+/* The chain of chapters in superposition: from violet to teal. */
+.chain::before {
+  background: linear-gradient(oklch(0.72 0.06 250), oklch(0.68 0.13 292), oklch(0.7 0.12 10), oklch(0.74 0.11 110),
+    oklch(0.7 0.11 195), oklch(0.66 0.13 225));
+  width: 3px;
+  border-radius: 2px;
+}
+.chain-compact li::before { background: linear-gradient(90deg, oklch(0.82 0.05 250), oklch(0.8 0.08 300), oklch(0.82 0.07 45), oklch(0.82 0.07 160), oklch(0.8 0.08 225)); }
+:root[data-theme="dark"] .chain-compact li::before { background: linear-gradient(90deg, oklch(0.4 0.05 250), oklch(0.42 0.08 300), oklch(0.42 0.07 45), oklch(0.42 0.07 160), oklch(0.42 0.08 225)); }
