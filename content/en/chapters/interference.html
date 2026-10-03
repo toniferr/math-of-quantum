@@ -1,0 +1,96 @@
+<!--meta
+{
+  "slug": "interference",
+  "title": "Interference",
+  "chain": "Superposition",
+  "headline": "Amplitudes that cancel out",
+  "dek": "Probabilities only add up; amplitudes can cancel. That single difference, interference, is the source of all quantum advantage. A coin tossed twice is still random; a “quantum coin” tossed twice gives a certain answer.",
+  "era": "1801 – 2001",
+  "people": ["Thomas Young", "Erwin Schrödinger", "Richard Feynman", "Akira Tonomura", "Andris Ambainis"],
+  "theorems": ["Linearity and unitarity", "Interference term", "Hadamard squared is the identity", "Mach–Zehnder interferometer"]
+}
+-->
+
+<p>In 1801 Thomas Young passed light through two narrow slits and saw on the wall a pattern of light and dark bands: where the waves arrived in step they reinforced each other, and where they arrived out of step they cancelled. In 1989 Akira Tonomura's team at Hitachi repeated the experiment by firing <em>single electrons</em>, one at a time. Each one left a single dot on the screen, but after thousands of them the same bands appeared. Each electron behaves as if it went through both slits and interfered with itself.</p>
+
+<h2>Evolution is linear and unitary</h2>
+
+<p>Between measurements, a closed quantum system evolves according to Schrödinger's equation (1926), $i\hbar\,\frac{d}{dt}\ket{\psi} = H\ket{\psi}$. Its solution is $\ket{\psi(t)} = U(t)\ket{\psi(0)}$ with $U(t) = e^{-iHt/\hbar}$, a linear map that preserves the norm.</p>
+
+<div class="definition">
+  <span class="th-title">Postulate <span class="th-name">(evolution)</span></span>
+  <p>The evolution of a closed system over a time interval is given by a <strong>unitary</strong> matrix $U$, that is, one with $U^\dagger U = I$:</p>
+  $$\ket{\psi} \mapsto U\ket{\psi}.$$
+</div>
+
+<p>Linearity is the <strong>superposition principle</strong>: if $\ket{\psi_1}$ and $\ket{\psi_2}$ are possible states, so is any normalized combination of them, and $U$ acts on each part separately. Unitarity ensures that probabilities keep adding up to 1, and that every evolution can be undone with $U^\dagger$: it is the quantum version of <a href="@ch:bits">reversible</a> computation.</p>
+
+<h2>The interference term</h2>
+
+<p>Suppose an outcome can be reached along two paths with amplitudes $a$ and $b$. Quantum mechanics adds the amplitudes and only then squares:</p>
+
+$$|a + b|^2 = \underbrace{|a|^2 + |b|^2}_{\text{classical}} + \underbrace{2\,\mathrm{Re}\left(\overline{a}\,b\right)}_{\text{interference}}.$$
+
+<p>The last term can be positive (<strong>constructive</strong> interference) or negative (<strong>destructive</strong>). If $b = -a$, the outcome becomes impossible even though each path, on its own, would reach it. Richard Feynman made this rule the starting point of his formulation of quantum mechanics (1948): the amplitude of a process is the <strong>sum over all paths</strong> of the product of the amplitudes along each path.</p>
+
+<div class="theorem">
+  <span class="th-title">Proposition <span class="th-name">(classical probabilities never cancel)</span></span>
+  <p>If $S_1, \dots, S_k$ are stochastic matrices, the probability of reaching an outcome is a sum, over paths, of products of non-negative numbers. Adding a new path can only increase it.</p>
+</div>
+
+<p>This is the whole difference. A randomized algorithm can only accumulate probability on the good answers; a quantum algorithm can, in addition, <em>remove</em> probability from the bad ones by making their paths cancel each other out.</p>
+
+<h2>A quantum coin</h2>
+
+<p>The <strong>Hadamard gate</strong> is the quantum version of tossing a coin:</p>
+
+$$H = \frac{1}{\sqrt2}\begin{pmatrix} 1 & 1 \\ 1 & -1\end{pmatrix}, \qquad H\ket{0} = \ket{+} = \frac{\ket{0} + \ket{1}}{\sqrt2}, \qquad H\ket{1} = \ket{-} = \frac{\ket{0} - \ket{1}}{\sqrt2}.$$
+
+<p>Applied to $\ket{0}$ it gives a 50/50 superposition. A classical random coin applied twice still gives 50/50. The quantum coin, applied twice, gives back exactly the starting state.</p>
+
+<div class="theorem">
+  <span class="th-title">Proposition <span class="th-name">($H^2 = I$)</span></span>
+  $$H H \ket{0} = \frac{1}{\sqrt2}\left(H\ket{0} + H\ket{1}\right) = \frac{1}{2}\left(\ket{0} + \ket{1} + \ket{0} - \ket{1}\right) = \ket{0}.$$
+</div>
+
+<p>The two paths that lead to $\ket{1}$ have amplitudes $+\tfrac12$ and $-\tfrac12$ and cancel out; the two that lead to $\ket{0}$ add up. The randomness of the first coin was not ignorance about a hidden result: it was a superposition, and superpositions can be undone.</p>
+
+<h2 id="mach-zehnder">The Mach–Zehnder interferometer</h2>
+
+<p>The same circuit can be built with light: a beam splitter (which acts as $H$), two arms, and a second splitter. If one arm adds a phase delay $\varphi$, the circuit is $H \cdot P(\varphi) \cdot H$, with $P(\varphi) = \mathrm{diag}(1, e^{i\varphi})$.</p>
+
+<div class="theorem">
+  <span class="th-title">Proposition <span class="th-name">(interferometer)</span></span>
+  <p>Starting from $\ket{0}$, the output of $H\,P(\varphi)\,H$ is detected at 0 with probability</p>
+  $$P(0) = \left|\frac{1 + e^{i\varphi}}{2}\right|^2 = \cos^2\frac{\varphi}{2}.$$
+</div>
+
+<figure class="demo wide" data-demo="interference/interferometer">
+  <figcaption>Each output receives two contributions, one per arm. The arrows show the two amplitudes as complex numbers and their sum. With $\varphi = 0$ they reinforce at detector 0 and cancel at detector 1; with $\varphi = \pi$ the opposite happens. The particle is never split: each run triggers exactly one detector, but the probabilities follow the interference.</figcaption>
+</figure>
+
+<h2>Quantum walks</h2>
+
+<p>Interference has striking effects even on simple processes. In a classical <strong>random walk</strong>, a walker flips a coin at each step and moves left or right: after $t$ steps its typical distance from the origin grows like $\sqrt{t}$, a consequence of the central limit theorem. In a <strong>quantum walk</strong> (Aharonov, Davidovich and Zagury, 1993; Ambainis et al., 2001) the coin is a qubit, the Hadamard gate is applied to it, and the walker moves left or right <em>in superposition</em> depending on the coin.</p>
+
+<figure class="demo wide" data-demo="interference/walk">
+  <figcaption>Distribution of the position after $t$ steps. The classical walk (grey) is the familiar bell curve, of width $\sqrt{t}$. The quantum walk (colour) has an irregular shape with two peaks that move away at constant speed: its spread grows like $t$, quadratically faster. Paths that return to the centre cancel each other out.</figcaption>
+</figure>
+
+<div class="theorem">
+  <span class="th-title">Theorem <span class="th-name">(ballistic spreading; Ambainis et al., 2001)</span></span>
+  <p>For the Hadamard walk on the line, the standard deviation of the position after $t$ steps grows linearly, $\sigma_t = \Theta(t)$, whereas for the classical random walk $\sigma_t = \sqrt{t}$.</p>
+</div>
+
+<p>This quadratic difference is the same one that will appear in <a href="@ch:grover">Grover's algorithm</a>, and quantum walks are the basis of several algorithms with exponential speedups for problems on graphs. The general lesson: a quantum computer does not try all the answers at once. It choreographs interference so that the paths towards the wrong answers cancel out.</p>
+
+<section class="references">
+  <h2>References</h2>
+  <ol>
+    <li>T. Young (1804). “The Bakerian Lecture: Experiments and Calculations Relative to Physical Optics”. <em>Philosophical Transactions of the Royal Society</em>, 94.</li>
+    <li>R. P. Feynman (1948). “Space-Time Approach to Non-Relativistic Quantum Mechanics”. <em>Reviews of Modern Physics</em>, 20(2).</li>
+    <li>A. Tonomura et al. (1989). “Demonstration of single-electron buildup of an interference pattern”. <em>American Journal of Physics</em>, 57(2).</li>
+    <li>Y. Aharonov, L. Davidovich and N. Zagury (1993). “Quantum random walks”. <em>Physical Review A</em>, 48(2).</li>
+    <li>A. Ambainis, E. Bach, A. Nayak, A. Vishwanath and J. Watrous (2001). “One-dimensional quantum walks”. <em>STOC</em>.</li>
+  </ol>
+</section>

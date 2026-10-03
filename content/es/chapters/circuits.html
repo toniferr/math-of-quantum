@@ -1,0 +1,112 @@
+<!--meta
+{
+  "slug": "circuitos",
+  "title": "Puertas y circuitos",
+  "chain": "Circuitos",
+  "headline": "Programar con matrices unitarias",
+  "dek": "Una puerta cuántica es una matriz unitaria y un circuito es un producto de ellas. Unas pocas puertas bastan para aproximar cualquier cálculo, y algunos circuitos de aspecto muy potente se pueden simular de forma clásica. La frontera entre unos y otros es la teoría de la complejidad cuántica.",
+  "era": "1985 – 1998",
+  "people": ["David Deutsch", "Richard Jozsa", "Adriano Barenco", "Robert Solovay", "Alexei Kitaev", "Daniel Gottesman", "Ethan Bernstein", "Umesh Vazirani"],
+  "theorems": ["Caracterización de los unitarios", "Descomposición de Euler (ZYZ)", "Universalidad de CNOT + 1 qubit", "Solovay-Kitaev", "Gottesman-Knill"]
+}
+-->
+
+<p>En 1985 David Deutsch, en Oxford, definió el ordenador cuántico universal: una máquina de Turing cuyos estados pueden estar en superposición. El modelo que se impuso, sin embargo, fue el que él mismo desarrolló en 1989: los <strong>circuitos cuánticos</strong>, cables que transportan qubits y puertas que los transforman. Es el lenguaje en el que hoy se escriben todos los algoritmos cuánticos.</p>
+
+<h2>Las puertas son matrices unitarias</h2>
+
+<div class="theorem">
+  <span class="th-title">Teorema <span class="th-name">(caracterización de los unitarios)</span></span>
+  <p>Para una matriz $U \in \mathbb{C}^{d\times d}$ son equivalentes: (1) $U^\dagger U = I$; (2) $U$ conserva los productos interiores, $\braket{U\phi}{U\psi} = \braket{\phi}{\psi}$; (3) $U$ conserva las normas, $\|U\psi\| = \|\psi\|$; (4) las columnas de $U$ forman una base ortonormal.</p>
+</div>
+
+<details class="proof">
+  <summary>Demostración</summary>
+  <div>
+    <p>(1)⇒(2): $\braket{U\phi}{U\psi} = \bra{\phi}U^\dagger U\ket{\psi} = \braket{\phi}{\psi}$. (2)⇒(3) es el caso $\phi = \psi$. (3)⇒(2) usa la <em>identidad de polarización</em>, que recupera el producto interior a partir de normas: $\braket{\phi}{\psi} = \frac14\sum_{k=0}^{3} i^{-k}\,\|\phi + i^k\psi\|^2$. (2)⇔(4): las entradas de $U^\dagger U$ son los productos interiores de las columnas. (4)⇒(1) por el mismo motivo.</p>
+  </div>
+</details>
+
+<p>Las puertas de un qubit más habituales son las matrices de Pauli, la puerta de Hadamard y las puertas de fase:</p>
+
+$$X,\ Y,\ Z, \qquad H = \frac{1}{\sqrt2}\begin{pmatrix}1 & 1\\ 1 & -1\end{pmatrix}, \qquad S = \begin{pmatrix}1 & 0\\ 0 & i\end{pmatrix}, \qquad T = \begin{pmatrix}1 & 0\\ 0 & e^{i\pi/4}\end{pmatrix}.$$
+
+<p>En la esfera de Bloch, toda puerta de un qubit es una <strong>rotación</strong>. $X$, $Y$ y $Z$ son medias vueltas alrededor de cada eje; $H$ es media vuelta alrededor del eje situado entre $x$ y $z$; $S$ y $T$ son un cuarto y un octavo de vuelta alrededor de $z$.</p>
+
+<div class="theorem">
+  <span class="th-title">Teorema <span class="th-name">(descomposición de Euler)</span></span>
+  <p>Todo unitario $U \in \mathbb{C}^{2\times2}$ se puede escribir como</p>
+  $$U = e^{i\alpha}\, R_z(\beta)\, R_y(\gamma)\, R_z(\delta), \qquad R_z(\theta) = e^{-i\theta Z/2},\ R_y(\theta) = e^{-i\theta Y/2},$$
+  <p>para ciertos reales $\alpha, \beta, \gamma, \delta$: cualquier rotación de la esfera es una composición de rotaciones alrededor de $z$, $y$ y $z$.</p>
+</div>
+
+<h2>Dos qubits: CNOT</h2>
+
+<p>La puerta NOT controlada invierte el segundo qubit (el <em>objetivo</em>) solo si el primero (el <em>control</em>) vale 1. En la base $\ket{00}, \ket{01}, \ket{10}, \ket{11}$:</p>
+
+$$\mathrm{CNOT} = \begin{pmatrix} 1&0&0&0\\ 0&1&0&0\\ 0&0&0&1\\ 0&0&1&0 \end{pmatrix}, \qquad \mathrm{CNOT}\,(H\otimes I)\ket{00} = \frac{\ket{00} + \ket{11}}{\sqrt2} = \ket{\Phi^+}.$$
+
+<p>Una Hadamard seguida de una CNOT crea <a href="@ch:entanglement">entrelazamiento</a> desde cero. Pruébalo en el simulador.</p>
+
+<figure class="demo wide" data-demo="circuits/simulator">
+  <figcaption>Un simulador de circuitos de tres qubits. Haz clic en una celda para recorrer las puertas; un ● en una columna convierte las demás puertas de esa columna en puertas <em>controladas</em> (● más ⊕ es una CNOT; ●●⊕ es una Toffoli). Las barras muestran las $2^3 = 8$ amplitudes del estado final: la altura es la probabilidad y el color, la fase. Los ejemplos incluyen un par de Bell, un estado GHZ y el algoritmo de Deutsch-Jozsa.</figcaption>
+</figure>
+
+<h2>Universalidad</h2>
+
+<p>En el mundo clásico, NAND basta para construirlo todo. ¿Hay un conjunto cuántico finito que también baste? La respuesta llega en dos pasos.</p>
+
+<div class="theorem">
+  <span class="th-title">Teorema <span class="th-name">(universalidad exacta; Barenco et al., 1995)</span></span>
+  <p>Todo unitario sobre $n$ qubits se puede escribir exactamente como producto de puertas CNOT y puertas de un qubit.</p>
+</div>
+
+<p>Pero hay infinitas puertas de un qubit, y un dispositivo real solo puede implementar unas pocas con alta precisión. Por suerte, aproximar basta, y sale barato:</p>
+
+<div class="theorem">
+  <span class="th-title">Teorema <span class="th-name">(Solovay-Kitaev, 1995–1997)</span></span>
+  <p>Sea $\mathcal{G}$ un conjunto finito de puertas de un qubit, cerrado por inversos, que genera un subgrupo denso de $SU(2)$ (por ejemplo $\{H, T, T^\dagger\}$). Entonces toda puerta de un qubit se puede aproximar con precisión $\varepsilon$ mediante un producto de $O\!\left(\log^{c}(1/\varepsilon)\right)$ puertas de $\mathcal{G}$, con $c \approx 4$ (versiones mejoradas llegan a $c < 2$).</p>
+</div>
+
+<p>Juntas, $\{H, T, \mathrm{CNOT}\}$ forman un conjunto universal: cualquier cálculo cuántico se puede aproximar con un sobrecoste polilogarítmico.</p>
+
+<h2>No todo circuito cuántico es potente</h2>
+
+<p>La superposición y el entrelazamiento son necesarios para una ventaja cuántica, pero no suficientes. Los circuitos construidos con $H$, $S$ y CNOT (el grupo de <strong>Clifford</strong>) pueden generar estados muy entrelazados y, aun así:</p>
+
+<div class="theorem">
+  <span class="th-title">Teorema <span class="th-name">(Gottesman-Knill, 1998)</span></span>
+  <p>Un circuito que parte de $\ket{0\cdots0}$, usa solo puertas de Clifford y mide en la base computacional se puede simular con un ordenador clásico en tiempo polinómico en el número de qubits y de puertas.</p>
+</div>
+
+<p>El truco es describir el estado no por sus $2^n$ amplitudes, sino por los $n$ operadores de Pauli que lo dejan invariante (sus <em>estabilizadores</em>), que las puertas de Clifford transforman unos en otros. La potencia de un ordenador cuántico viene de añadir puertas no Clifford como $T$, que además son las más caras de proteger frente a errores.</p>
+
+<h2>Deutsch-Jozsa: la primera separación exponencial</h2>
+
+<p>Supongamos que nos prometen que una función $f : \{0,1\}^n \to \{0,1\}$ es <strong>constante</strong> o <strong>equilibrada</strong> (vale 0 en exactamente la mitad de las entradas). Un algoritmo clásico determinista puede necesitar $2^{n-1} + 1$ consultas para estar seguro. El algoritmo de Deutsch y Jozsa (1992) necesita una sola:</p>
+
+$$\ket{0}^{\otimes n} \xrightarrow{H^{\otimes n}} \frac{1}{\sqrt{2^n}}\sum_x \ket{x} \xrightarrow{\ U_f\ } \frac{1}{\sqrt{2^n}}\sum_x (-1)^{f(x)}\ket{x} \xrightarrow{H^{\otimes n}} \cdots$$
+
+<p>La amplitud de $\ket{0\cdots0}$ al final es $\frac{1}{2^n}\sum_x(-1)^{f(x)}$: vale $\pm1$ si $f$ es constante y exactamente 0 si es equilibrada. Medir todo ceros o no responde la pregunta con certeza. Un algoritmo clásico aleatorio puede responder con alta probabilidad usando unas pocas consultas, así que la separación es frente a algoritmos deterministas; pero la idea (poner la información en las fases y hacerla interferir) es la plantilla de todo lo que sigue.</p>
+
+<aside class="note">El oráculo actúa como $U_f\ket{x}\ket{y} = \ket{x}\ket{y\oplus f(x)}$, y con $\ket{y} = \ket{-}$ el resultado es la fase $(-1)^{f(x)}$ (<em>retroceso de fase</em>).</aside>
+
+<h2>Complejidad cuántica</h2>
+
+<p>En 1993 Ethan Bernstein y Umesh Vazirani definieron <strong>BQP</strong>, la clase de problemas que un ordenador cuántico resuelve en tiempo polinómico con probabilidad de error como mucho $1/3$. También demostraron que</p>
+
+$$\mathrm{BPP} \subseteq \mathrm{BQP} \subseteq \mathrm{PSPACE}.$$
+
+<p>La primera inclusión dice que los ordenadores cuánticos pueden hacer todo lo que hacen los clásicos aleatorios (gracias a <a href="@ch:bits">Toffoli</a>); la segunda, que se pueden simular con memoria polinómica, sumando sobre caminos. No se sabe si alguna de las inclusiones es estricta: demostrar $\mathrm{BPP} \neq \mathrm{BQP}$ implicaría $\mathrm{P} \neq \mathrm{PSPACE}$, un gran problema abierto. La evidencia del poder cuántico son, por ahora, algoritmos como el de <a href="@ch:shor">Shor</a> para problemas que creemos difíciles para los ordenadores clásicos.</p>
+
+<section class="references">
+  <h2>Referencias</h2>
+  <ol>
+    <li>D. Deutsch (1985). «Quantum theory, the Church–Turing principle and the universal quantum computer». <em>Proceedings of the Royal Society A</em>, 400.</li>
+    <li>D. Deutsch y R. Jozsa (1992). «Rapid solution of problems by quantum computation». <em>Proceedings of the Royal Society A</em>, 439.</li>
+    <li>E. Bernstein y U. Vazirani (1993). «Quantum complexity theory». <em>STOC</em> (versión de revista: <em>SIAM J. Computing</em>, 1997).</li>
+    <li>A. Barenco et al. (1995). «Elementary gates for quantum computation». <em>Physical Review A</em>, 52(5).</li>
+    <li>D. Gottesman (1998). «The Heisenberg Representation of Quantum Computers». arXiv:quant-ph/9807006.</li>
+    <li>C. M. Dawson y M. A. Nielsen (2006). «The Solovay-Kitaev algorithm». <em>Quantum Information and Computation</em>, 6(1).</li>
+  </ol>
+</section>

@@ -1,0 +1,112 @@
+<!--meta
+{
+  "slug": "error-correction",
+  "title": "Errors and decoherence",
+  "chain": "Correction",
+  "headline": "Protecting what cannot be copied",
+  "dek": "Qubits are fragile: any interaction with the environment degrades their superpositions. For years it seemed impossible to protect them, because they cannot be copied or looked at. Quantum error-correcting codes and the threshold theorem showed how, and in 2024 an experiment crossed the threshold for the first time.",
+  "era": "1995 – 2024",
+  "people": ["Peter Shor", "Andrew Steane", "Emanuel Knill", "Raymond Laflamme", "Daniel Gottesman", "Alexei Kitaev", "Dorit Aharonov", "John Preskill"],
+  "theorems": ["Kraus representation", "Discretization of errors", "Knill–Laflamme conditions", "Threshold theorem"]
+}
+-->
+
+<p>A classical bit in memory can stay intact for years. A superconducting qubit keeps its superposition for, at best, around a millisecond. The culprit is <strong>decoherence</strong>: the qubit inevitably interacts with its surroundings (stray photons, vibrations, defects in the material), becomes entangled with them and, from our point of view, its pure state turns into a mixture. Building a useful quantum computer is, above all, a fight against decoherence.</p>
+
+<h2>Noise as a quantum channel</h2>
+
+<p>The most general evolution of an open system is not a unitary on the qubit alone, but a <strong>quantum channel</strong>: a linear map on density matrices that preserves trace and positivity, even when the system is part of a larger one.</p>
+
+<div class="theorem">
+  <span class="th-title">Theorem <span class="th-name">(Kraus representation; Choi 1975, Kraus 1983)</span></span>
+  <p>A map $\mathcal{E}$ is a quantum channel if and only if there are matrices $K_1, \dots, K_m$ with $\sum_j K_j^\dagger K_j = I$ such that</p>
+  $$\mathcal{E}(\rho) = \sum_{j=1}^{m} K_j\,\rho\,K_j^\dagger.$$
+</div>
+
+<p>Three channels capture the essence of noise in a qubit:</p>
+
+<ul>
+  <li><strong>Dephasing</strong> ($T_2$): with probability $p$ a $Z$ is applied. The relative phase is lost: the Bloch vector shrinks towards the $z$ axis, and superpositions become classical mixtures.</li>
+  <li><strong>Amplitude damping</strong> ($T_1$): the qubit decays from $\ket{1}$ to $\ket{0}$ by emitting energy, $K_0 = \begin{pmatrix} 1 & 0\\ 0 & \sqrt{1-\gamma}\end{pmatrix}$, $K_1 = \begin{pmatrix} 0 & \sqrt\gamma\\ 0 & 0\end{pmatrix}$. The whole sphere is pulled towards the north pole.</li>
+  <li><strong>Depolarizing</strong>: with probability $p$ the state is replaced by the maximally mixed one. The ball shrinks uniformly towards its centre.</li>
+</ul>
+
+<figure class="demo wide" data-demo="error-correction/decoherence">
+  <figcaption>Decoherence on the Bloch sphere. Choose a channel and let time pass: the cloud of initial states (the surface of the sphere) is deformed into an ellipsoid inside it. Every single-qubit channel acts as an affine contraction of the Bloch ball. Purity is lost and, with it, the ability to interfere.</figcaption>
+</figure>
+
+<h2>Why it seemed impossible</h2>
+
+<p>Classical error correction is based on redundancy: send $000$ instead of $0$ and decide by majority. With qubits, three obstacles seemed insurmountable:</p>
+
+<ol>
+  <li><strong>No copies.</strong> The <a href="@ch:measurement#no-cloning">no-cloning theorem</a> forbids triplicating an unknown state.</li>
+  <li><strong>Measuring destroys.</strong> Checking whether a qubit has suffered an error collapses its superposition.</li>
+  <li><strong>Errors are continuous.</strong> A qubit is not just flipped; it can rotate by any small angle, an infinite family of errors.</li>
+</ol>
+
+<p>In 1995 Peter Shor overcame all three with a nine-qubit code. The key ideas can be seen in a simpler code.</p>
+
+<h2>The three-qubit code</h2>
+
+<p>We encode not copies, but an <em>entangled</em> state, which is allowed:</p>
+
+$$\alpha\ket{0} + \beta\ket{1} \;\longmapsto\; \alpha\ket{000} + \beta\ket{111}.$$
+
+<p>If one qubit is flipped by an $X$ error, we do not measure the qubits (that would destroy $\alpha$ and $\beta$). We measure the <strong>parities</strong> $Z_1Z_2$ and $Z_2Z_3$: whether the first two qubits agree and whether the last two agree. Those two bits, the <strong>syndrome</strong>, identify which qubit failed (or that none did) and reveal absolutely nothing about $\alpha$ and $\beta$, because the two components of the superposition give the same answer. Applying $X$ to the faulty qubit restores the state.</p>
+
+<div class="theorem">
+  <span class="th-title">Theorem <span class="th-name">(discretization of errors)</span></span>
+  <p>If a code corrects a set of errors $\{E_a\}$, it corrects every error that is a linear combination of them. In particular, a code that corrects $X$, $Z$ and $Y = iXZ$ on any single qubit corrects <strong>any</strong> error, even a continuous one, that affects a single qubit.</p>
+</div>
+
+<p>Measuring the syndrome forces a continuous error to “decide” which discrete error it was. Combining protection against $X$ (bit flips) and $Z$ (phase flips), Shor's code nests a three-qubit code inside another and protects a logical qubit with nine physical ones. Steane (1996) found one with seven, and Laflamme, Miquel, Paz and Zurek (1996) the smallest possible, with five.</p>
+
+<div class="theorem">
+  <span class="th-title">Theorem <span class="th-name">(Knill–Laflamme conditions, 1997)</span></span>
+  <p>Let $P$ be the projector onto the code space. The code corrects the set of errors $\{E_a\}$ if and only if, for all $a, b$,</p>
+  $$P\,E_a^\dagger E_b\,P = c_{ab}\,P$$
+  <p>for some numbers $c_{ab}$: errors must not distort the code space in a way that depends on the encoded information.</p>
+</div>
+
+<figure class="demo wide" data-demo="error-correction/repetition">
+  <figcaption>The repetition code with $d$ copies, decoded by majority, against independent errors with probability $p$ per qubit. When $p$ is small, increasing $d$ suppresses the logical error exponentially; when $p$ is large, it makes it worse. The curves cross at the <strong>threshold</strong> (here $p = 1/2$; for real quantum codes with noisy measurements it is around 1%). Run the simulation to see the votes.</figcaption>
+</figure>
+
+<h2>The threshold theorem</h2>
+
+<p>Correcting errors requires more gates, and those gates also fail. Could correction introduce more errors than it removes? The answer, found independently by several groups between 1996 and 1998, is the most important result of the field.</p>
+
+<div class="theorem">
+  <span class="th-title">Theorem <span class="th-name">(threshold; Aharonov–Ben-Or, Kitaev, Knill–Laflamme–Zurek)</span></span>
+  <p>There is a constant $p_{\mathrm{th}} > 0$ such that, if every elementary component fails independently with probability $p < p_{\mathrm{th}}$, any quantum circuit with $T$ gates can be executed with final error at most $\varepsilon$ using $O\big(T\,\mathrm{polylog}(T/\varepsilon)\big)$ gates.</p>
+</div>
+
+<p>The idea is concatenation: encode each qubit in a code, each qubit of the code in another code, and so on. If one level reduces the error rate from $p$ to $cp^2$, $L$ levels reduce it to $(cp)^{2^L}/c$, a doubly exponential decrease, provided $cp < 1$. Below the threshold, noise can be defeated; above it, nothing works.</p>
+
+<h2>Surface codes and the present</h2>
+
+<p>The <strong>stabilizer</strong> formalism (Gottesman, 1997) described codes by the Pauli operators they leave invariant, and Alexei Kitaev's topological codes (1997) led to the <strong>surface code</strong>: qubits on a two-dimensional grid where only neighbouring parities are measured, with a threshold close to 1%. With distance $d$ it uses about $2d^2$ physical qubits per logical qubit, and below the threshold the logical error falls exponentially with $d$.</p>
+
+<p>For decades this was theory. In December 2024 Google Quantum AI published the first convincing demonstration of operation below threshold: with its <em>Willow</em> processor, increasing the distance of a surface code from 3 to 5 and from 5 to 7 halved the logical error rate at each step (a suppression factor $\Lambda \approx 2.1$). Around the same time, teams working with neutral atoms and trapped ions reported processors with dozens of logical qubits. The era John Preskill called <strong>NISQ</strong> in 2018 (<em>noisy intermediate-scale quantum</em>) has begun to give way to the era of fault tolerance.</p>
+
+<div class="idea">
+  <span class="th-title">The whole chain</span>
+  <p>Bits became vectors; changing the 1-norm for the 2-norm gave the qubit; amplitudes that can cancel gave interference; measurement extracted information; the tensor product gave entanglement; unitary gates gave a programming language; the Fourier transform and amplitude amplification gave algorithms; and error-correcting codes give the hope of running them. Every step is linear algebra. The engineering is just getting started.</p>
+</div>
+
+<p class="cta-row"><a class="cta primary" href="@timeline">Review the full history →</a><a class="cta" href="@home">Back to the contents</a></p>
+
+<section class="references">
+  <h2>References</h2>
+  <ol>
+    <li>P. W. Shor (1995). “Scheme for reducing decoherence in quantum computer memory”. <em>Physical Review A</em>, 52(4).</li>
+    <li>A. M. Steane (1996). “Error Correcting Codes in Quantum Theory”. <em>Physical Review Letters</em>, 77(5).</li>
+    <li>E. Knill and R. Laflamme (1997). “Theory of quantum error-correcting codes”. <em>Physical Review A</em>, 55(2).</li>
+    <li>D. Gottesman (1997). <em>Stabilizer Codes and Quantum Error Correction</em>. PhD thesis, Caltech.</li>
+    <li>D. Aharonov and M. Ben-Or (1997). “Fault-tolerant quantum computation with constant error”. <em>STOC</em>.</li>
+    <li>A. Y. Kitaev (2003). “Fault-tolerant quantum computation by anyons”. <em>Annals of Physics</em>, 303 (arXiv 1997).</li>
+    <li>J. Preskill (2018). “Quantum Computing in the NISQ era and beyond”. <em>Quantum</em>, 2.</li>
+    <li>Google Quantum AI and collaborators (2025). “Quantum error correction below the surface code threshold”. <em>Nature</em>, 638.</li>
+  </ol>
+</section>

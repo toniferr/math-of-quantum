@@ -1,0 +1,106 @@
+<!--meta
+{
+  "slug": "qubits",
+  "title": "Qubits",
+  "chain": "Qubit",
+  "headline": "A unit vector in a complex space",
+  "dek": "A qubit is not “0 and 1 at the same time”. It is a unit vector in $\\mathbb{C}^2$, whose components are complex amplitudes; their squared moduli give the probabilities of each outcome. Geometrically, every qubit is a point on a sphere.",
+  "era": "1900 – 1973",
+  "people": ["Max Planck", "Werner Heisenberg", "Erwin Schrödinger", "Max Born", "Paul Dirac", "John von Neumann", "Felix Bloch"],
+  "theorems": ["Born rule", "Invisibility of global phase", "Bloch sphere", "Holevo bound"]
+}
+-->
+
+<p>In 1900 Max Planck explained the spectrum of hot bodies by assuming that energy is exchanged in discrete packets, <em>quanta</em>. A quarter of a century later, Heisenberg (1925) and Schrödinger (1926) built two theories that looked different and turned out to be the same, and in 1932 John von Neumann gave them their definitive mathematical form: the states of a quantum system are vectors in a <strong>Hilbert space</strong>. The smallest non-trivial quantum system has a two-dimensional space: the <strong>qubit</strong>.</p>
+
+<h2>Hilbert spaces and Dirac notation</h2>
+
+<div class="definition">
+  <span class="th-title">Definition <span class="th-name">(Hilbert space, finite dimension)</span></span>
+  <p>A vector space $\mathcal{H} = \mathbb{C}^d$ with the <strong>inner product</strong> $\braket{\phi}{\psi} = \sum_i \overline{\phi_i}\, \psi_i$, which is linear in the second argument, satisfies $\braket{\phi}{\psi} = \overline{\braket{\psi}{\phi}}$ and $\braket{\psi}{\psi} = \|\psi\|^2 \ge 0$, with equality only for $\psi = 0$.</p>
+</div>
+
+<p>Paul Dirac introduced in 1939 a notation that is still used everywhere. A column vector is a <strong>ket</strong>, $\ket{\psi}$; its conjugate transpose, a row vector, is a <strong>bra</strong>, $\bra{\psi} = \ket{\psi}^\dagger$. Placed together they give a <em>bra-ket</em>, the inner product $\braket{\phi}{\psi}$, and in the opposite order an operator: $\ketbra{\psi}{\psi}$ is the projector onto $\ket{\psi}$.</p>
+
+<h2>The qubit and the Born rule</h2>
+
+<div class="definition">
+  <span class="th-title">Postulate <span class="th-name">(states)</span></span>
+  <p>The state of a qubit is a unit vector in $\mathbb{C}^2$:</p>
+  $$\ket{\psi} = \alpha\ket{0} + \beta\ket{1}, \qquad \alpha, \beta \in \mathbb{C}, \qquad |\alpha|^2 + |\beta|^2 = 1.$$
+</div>
+
+<p>The numbers $\alpha$ and $\beta$ are <strong>amplitudes</strong>. They cannot be observed directly. What can be observed is the outcome of a measurement, and here Max Born, in a footnote to a 1926 paper, gave the rule that connects the formalism with the laboratory.</p>
+
+<div class="theorem">
+  <span class="th-title">Postulate <span class="th-name">(Born rule)</span></span>
+  <p>Measuring $\ket{\psi}$ in the basis $\{\ket{0}, \ket{1}\}$ gives 0 with probability $|\alpha|^2 = |\braket{0}{\psi}|^2$ and 1 with probability $|\beta|^2 = |\braket{1}{\psi}|^2$. After the measurement the state becomes $\ket{0}$ or $\ket{1}$, according to the outcome.</p>
+</div>
+
+<p>This is why a qubit is not “0 and 1 at once”: it is a state that, when measured, gives one definite result with probabilities set by the amplitudes. The difference from a probabilistic bit is that amplitudes are complex numbers that can cancel each other out, which we will see in the <a href="@ch:interference">next chapter</a>. Each amplitude can be pictured as an arrow in the complex plane: its length is the modulus and its angle is the <strong>phase</strong>, $\alpha = |\alpha|\, e^{i\varphi}$.</p>
+
+<h2>Global phase is invisible</h2>
+
+<div class="theorem">
+  <span class="th-title">Proposition <span class="th-name">(global phase)</span></span>
+  <p>For every real $\gamma$, the states $\ket{\psi}$ and $e^{i\gamma}\ket{\psi}$ give the same probabilities for every possible measurement.</p>
+</div>
+
+<details class="proof">
+  <summary>Proof</summary>
+  <div>
+    <p>Any outcome has probability $|\braket{e}{\psi}|^2$ for some unit vector $\ket{e}$. Multiplying by $e^{i\gamma}$ gives $|e^{i\gamma}|^2 |\braket{e}{\psi}|^2 = |\braket{e}{\psi}|^2$, because $|e^{i\gamma}| = 1$.</p>
+  </div>
+</details>
+
+<p>On the other hand, the <strong>relative phase</strong> between $\alpha$ and $\beta$ does matter: $\tfrac{1}{\sqrt2}(\ket{0} + \ket{1})$ and $\tfrac{1}{\sqrt2}(\ket{0} - \ket{1})$ give the same probabilities in the basis $\{\ket{0}, \ket{1}\}$, but they are orthogonal states, perfectly distinguishable in another basis. They are called $\ket{+}$ and $\ket{-}$.</p>
+
+<h2 id="bloch">The Bloch sphere</h2>
+
+<p>A qubit has four real parameters (two complex numbers), minus one for normalization and one for the invisible global phase: two remain. Two angles, like latitude and longitude on a sphere.</p>
+
+<div class="theorem">
+  <span class="th-title">Theorem <span class="th-name">(Bloch sphere)</span></span>
+  <p>Up to a global phase, every state of a qubit can be written uniquely as</p>
+  $$\ket{\psi} = \cos\frac{\theta}{2}\ket{0} + e^{i\varphi}\sin\frac{\theta}{2}\ket{1}, \qquad \theta \in [0, \pi],\ \varphi \in [0, 2\pi),$$
+  <p>and the map $\ket{\psi} \mapsto (\sin\theta\cos\varphi,\ \sin\theta\sin\varphi,\ \cos\theta)$ is a bijection between pure states and the points of the unit sphere $S^2$ (with $\varphi$ undefined at the poles). Orthogonal states correspond to antipodal points.</p>
+</div>
+
+<details class="proof">
+  <summary>Proof</summary>
+  <div>
+    <p>Write $\alpha = |\alpha| e^{i a}$ and $\beta = |\beta| e^{i b}$. Multiplying by the global phase $e^{-ia}$ makes $\alpha$ real and non-negative, and leaves $\beta = |\beta|e^{i(b-a)}$. Since $|\alpha|^2 + |\beta|^2 = 1$, there is a unique $\theta \in [0, \pi]$ with $|\alpha| = \cos(\theta/2)$ and $|\beta| = \sin(\theta/2)$; set $\varphi = b - a$.</p>
+    <p>For orthogonality: $\braket{\psi}{\psi'} = 0$ means that the angle between the two vectors in $\mathbb{C}^2$ is 90°, and the half-angles in the formula double it into 180° on the sphere. Explicitly, the antipode of $(\theta, \varphi)$ is $(\pi - \theta, \varphi + \pi)$, and $\cos\frac{\theta}{2}\cos\frac{\pi - \theta}{2} - \sin\frac{\theta}{2}\sin\frac{\pi-\theta}{2} = \cos\frac{\pi}{2} = 0$.</p>
+  </div>
+</details>
+
+<figure class="demo wide" data-demo="qubits/bloch">
+  <figcaption>Drag the point on the sphere (or use the sliders). The north pole is $\ket{0}$ and the south pole $\ket{1}$; the equator holds the equally weighted superpositions, which differ only in their relative phase $\varphi$. The arrows on the right are the two amplitudes in the complex plane. Measuring gives 0 with probability $\cos^2(\theta/2)$, whatever the value of $\varphi$.</figcaption>
+</figure>
+
+<aside class="note">Felix Bloch introduced this representation in 1946 to describe nuclear magnetic resonance, decades before anyone spoke of qubits. Physical qubits come in many forms: the spin of an electron or nucleus, the polarization of a photon, two energy levels of an ion or of a superconducting circuit.</aside>
+
+<h2>How much information does a qubit hold?</h2>
+
+<p>Describing a qubit requires two real numbers, which in principle could have infinitely many decimal digits. Could a single qubit store an encyclopedia? No, and the reason is a theorem.</p>
+
+<div class="theorem">
+  <span class="th-title">Theorem <span class="th-name">(Holevo bound, 1973, special case)</span></span>
+  <p>If a classical message is encoded in the state of $n$ qubits and the receiver measures them in any way, the mutual information between message and outcome is at most $n$ bits.</p>
+</div>
+
+<p>Each measurement collapses the state and yields just one bit per qubit. The information of the amplitudes is real, but it is not accessible all at once. The art of quantum algorithms consists in making the amplitudes interfere so that, when we finally measure, the useful bit appears with high probability.</p>
+
+<p>We now have the static description of a qubit. In the next chapter we set it in motion, and the feature that sets amplitudes apart from probabilities appears: they can cancel each other out.</p>
+
+<section class="references">
+  <h2>References</h2>
+  <ol>
+    <li>M. Born (1926). “Zur Quantenmechanik der Stoßvorgänge”. <em>Zeitschrift für Physik</em>, 37.</li>
+    <li>J. von Neumann (1932). <em>Mathematische Grundlagen der Quantenmechanik</em>. Springer.</li>
+    <li>P. A. M. Dirac (1939). “A new notation for quantum mechanics”. <em>Mathematical Proceedings of the Cambridge Philosophical Society</em>, 35(3).</li>
+    <li>F. Bloch (1946). “Nuclear Induction”. <em>Physical Review</em>, 70.</li>
+    <li>A. S. Holevo (1973). “Bounds for the quantity of information transmitted by a quantum communication channel”. <em>Problems of Information Transmission</em>, 9(3).</li>
+    <li>M. A. Nielsen and I. L. Chuang (2010). <em>Quantum Computation and Quantum Information</em>, 10th anniversary ed. Cambridge University Press.</li>
+  </ol>
+</section>

@@ -1,0 +1,95 @@
+<!--meta
+{
+  "slug": "grover",
+  "title": "Grover's algorithm",
+  "chain": "Grover",
+  "headline": "Searching with rotations",
+  "dek": "To find a marked item among $N$ with no structure to help, any classical algorithm needs about $N$ attempts. Lov Grover found a quantum algorithm that needs only about $\\sqrt N$, by rotating a vector a little at a time in a two-dimensional plane. And it is provably impossible to do better.",
+  "era": "1996 – 2002",
+  "people": ["Lov Grover", "Charles Bennett", "Ethan Bernstein", "Gilles Brassard", "Umesh Vazirani", "Christof Zalka"],
+  "theorems": ["Two reflections make a rotation", "Optimal number of iterations", "Lower bound $\\Omega(\\sqrt N)$ (BBBV)", "Amplitude amplification"]
+}
+-->
+
+<p>Imagine a phone book with $N$ entries in random order and a single name you are looking for. With no structure to help, the only classical strategy is to look entry by entry: $N/2$ queries on average, $N$ in the worst case. In 1996 Lov Grover, at Bell Labs, showed that a quantum computer can find it with about $\frac{\pi}{4}\sqrt N$ queries. For a million entries, around 800 instead of half a million.</p>
+
+<h2>The problem</h2>
+
+<p>We have $N = 2^n$ items and an <strong>oracle</strong> that recognizes the marked one, $w$: a function $f(x) = 1$ if $x = w$ and 0 otherwise. Quantumly, the oracle acts as a phase flip:</p>
+
+$$O\ket{x} = (-1)^{f(x)}\ket{x}, \qquad O = I - 2\ketbra{w}{w}.$$
+
+<p>The oracle flips the sign of the amplitude of the marked item but, on its own, does not change any probability. Something has to turn that sign into probability. That is the job of interference.</p>
+
+<h2>The algorithm</h2>
+
+<p>Start from the uniform superposition $\ket{s} = H^{\otimes n}\ket{0} = \frac{1}{\sqrt N}\sum_x\ket{x}$ and repeat $k$ times the <strong>Grover iteration</strong>:</p>
+
+$$G = D\,O, \qquad D = 2\ketbra{s}{s} - I.$$
+
+<p>The operator $D$, called <strong>diffusion</strong>, is an inversion about the mean: it sends each amplitude $a_x$ to $2\bar a - a_x$, where $\bar a$ is the average. After the oracle, the marked amplitude is negative and far below the mean; when inverted, it rises well above it. Each iteration pumps a little more amplitude into $\ket{w}$.</p>
+
+<figure class="demo wide" data-demo="grover/search">
+  <figcaption>Grover's algorithm step by step. The bars are the amplitudes (real, with sign) and the dashed line is their mean. “Oracle” flips the sign of the marked item; “Diffusion” reflects every amplitude about the mean. The plot on the right shows the probability of success after each iteration: it oscillates as $\sin^2\big((2k+1)\theta\big)$, so iterating too much is as bad as iterating too little.</figcaption>
+</figure>
+
+<h2>The geometry: two reflections make a rotation</h2>
+
+<p>The whole algorithm happens in a two-dimensional plane. Let $\ket{w}$ be the marked state and $\ket{w^\perp}$ the uniform superposition of the unmarked ones. The initial state lies in their span:</p>
+
+$$\ket{s} = \sin\theta\,\ket{w} + \cos\theta\,\ket{w^\perp}, \qquad \sin\theta = \frac{1}{\sqrt N}.$$
+
+<div class="theorem">
+  <span class="th-title">Theorem <span class="th-name">(Grover iteration as a rotation)</span></span>
+  <p>On the plane spanned by $\ket{w}$ and $\ket{w^\perp}$, the oracle $O$ is the reflection across $\ket{w^\perp}$ and $D$ is the reflection across $\ket{s}$. Their product $G = DO$ is a <strong>rotation by $2\theta$</strong> towards $\ket{w}$. After $k$ iterations,</p>
+  $$G^k\ket{s} = \sin\big((2k+1)\theta\big)\ket{w} + \cos\big((2k+1)\theta\big)\ket{w^\perp},$$
+  <p>and the probability of measuring $w$ is $\sin^2\big((2k+1)\theta\big)$.</p>
+</div>
+
+<details class="proof">
+  <summary>Proof</summary>
+  <div>
+    <p>$O$ fixes $\ket{w^\perp}$ and flips $\ket{w}$, so it is the reflection across the line of $\ket{w^\perp}$. $D = 2\ketbra{s}{s} - I$ fixes $\ket{s}$ and flips every vector orthogonal to it, the reflection across the line of $\ket{s}$. The composition of two reflections across lines that form an angle $\theta$ is a rotation by $2\theta$ (a classical result of plane geometry). The initial state is at angle $\theta$ from $\ket{w^\perp}$; after $k$ rotations it is at angle $(2k+1)\theta$.</p>
+  </div>
+</details>
+
+<p>To reach $\ket{w}$ we want $(2k+1)\theta \approx \pi/2$, that is,</p>
+
+$$k \approx \frac{\pi}{4\theta} - \frac12 \approx \frac{\pi}{4}\sqrt N,$$
+
+<p>since $\theta \approx 1/\sqrt N$ for large $N$. With $M$ marked items, $\sin\theta = \sqrt{M/N}$ and about $\frac{\pi}{4}\sqrt{N/M}$ iterations are needed. The quadratic speedup comes from the fact that the probability is the <em>square</em> of the amplitude: the amplitude grows linearly with $k$, so it only has to reach $1$ starting from $1/\sqrt N$.</p>
+
+<h2>It cannot be done better</h2>
+
+<p>Before Grover's algorithm was even known, Bennett, Bernstein, Brassard and Vazirani had proved that it was optimal.</p>
+
+<div class="theorem">
+  <span class="th-title">Theorem <span class="th-name">(BBBV, 1997)</span></span>
+  <p>Any quantum algorithm that finds the marked item among $N$ with probability at least $2/3$, consulting the oracle as a black box, must make $\Omega(\sqrt N)$ queries.</p>
+</div>
+
+<details class="proof">
+  <summary>Idea of the proof (hybrid argument)</summary>
+  <div>
+    <p>Run the algorithm with an oracle that marks nothing. After $T$ queries, the total “query weight” it has placed on all items is $T$, so some item $w$ has received weight at most $T/N$. Changing the oracle to mark $w$ perturbs each step by an amount proportional to the square root of that weight, and the perturbations add up to at most $O(T/\sqrt N)$ in norm. To tell the two situations apart, the final states must differ by a constant, so $T = \Omega(\sqrt N)$.</p>
+  </div>
+</details>
+
+<p>Christof Zalka (1999) showed that Grover's algorithm is optimal even in the constant. The consequence is important: for problems with no structure, quantum computers offer a quadratic speedup, not an exponential one. In particular, they are not expected to solve NP-complete problems in polynomial time simply by “trying all the answers at once”.</p>
+
+<h2>Amplitude amplification</h2>
+
+<p>Brassard, Høyer, Mosca and Tapp (2002) generalized the idea. If a quantum algorithm $\mathcal{A}$ succeeds with probability $p$, it can be turned into one that succeeds with high probability using only $O(1/\sqrt p)$ repetitions of $\mathcal{A}$ and $\mathcal{A}^{-1}$, against the $O(1/p)$ that classical repetition needs. It is a quadratic accelerator for almost any quantum subroutine.</p>
+
+<aside class="note">For symmetric cryptography (AES and the like), Grover's algorithm halves the effective key length in bits: a 128-bit key would offer about 64 bits of security against a quantum attacker. That is why 256-bit keys are often recommended, although the long sequential circuits of Grover make the attack far less practical than the numbers suggest.</aside>
+
+<section class="references">
+  <h2>References</h2>
+  <ol>
+    <li>L. K. Grover (1996). “A fast quantum mechanical algorithm for database search”. <em>STOC</em>.</li>
+    <li>C. H. Bennett, E. Bernstein, G. Brassard and U. Vazirani (1997). “Strengths and Weaknesses of Quantum Computing”. <em>SIAM J. Computing</em>, 26(5).</li>
+    <li>M. Boyer, G. Brassard, P. Høyer and A. Tapp (1998). “Tight bounds on quantum searching”. <em>Fortschritte der Physik</em>, 46.</li>
+    <li>C. Zalka (1999). “Grover's quantum searching algorithm is optimal”. <em>Physical Review A</em>, 60(4).</li>
+    <li>G. Brassard, P. Høyer, M. Mosca and A. Tapp (2002). “Quantum amplitude amplification and estimation”. <em>Contemporary Mathematics</em>, 305.</li>
+  </ol>
+</section>

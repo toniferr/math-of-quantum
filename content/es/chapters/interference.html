@@ -1,0 +1,96 @@
+<!--meta
+{
+  "slug": "interferencia",
+  "title": "Interferencia",
+  "chain": "Superposición",
+  "headline": "Amplitudes que se anulan",
+  "dek": "Las probabilidades solo se suman; las amplitudes pueden anularse. Esa única diferencia, la interferencia, es el origen de toda ventaja cuántica. Una moneda lanzada dos veces sigue siendo aleatoria; una «moneda cuántica» lanzada dos veces da una respuesta segura.",
+  "era": "1801 – 2001",
+  "people": ["Thomas Young", "Erwin Schrödinger", "Richard Feynman", "Akira Tonomura", "Andris Ambainis"],
+  "theorems": ["Linealidad y unitariedad", "Término de interferencia", "Hadamard al cuadrado es la identidad", "Interferómetro de Mach-Zehnder"]
+}
+-->
+
+<p>En 1801 Thomas Young hizo pasar luz por dos rendijas estrechas y vio en la pared un patrón de franjas claras y oscuras: donde las ondas llegaban en fase se reforzaban, y donde llegaban desfasadas se anulaban. En 1989 el equipo de Akira Tonomura, en Hitachi, repitió el experimento disparando <em>electrones de uno en uno</em>. Cada uno dejaba un único punto en la pantalla, pero tras miles de ellos aparecían las mismas franjas. Cada electrón se comporta como si pasara por las dos rendijas e interfiriera consigo mismo.</p>
+
+<h2>La evolución es lineal y unitaria</h2>
+
+<p>Entre medidas, un sistema cuántico cerrado evoluciona según la ecuación de Schrödinger (1926), $i\hbar\,\frac{d}{dt}\ket{\psi} = H\ket{\psi}$. Su solución es $\ket{\psi(t)} = U(t)\ket{\psi(0)}$ con $U(t) = e^{-iHt/\hbar}$, una aplicación lineal que conserva la norma.</p>
+
+<div class="definition">
+  <span class="th-title">Postulado <span class="th-name">(evolución)</span></span>
+  <p>La evolución de un sistema cerrado durante un intervalo de tiempo viene dada por una matriz <strong>unitaria</strong> $U$, es decir, una con $U^\dagger U = I$:</p>
+  $$\ket{\psi} \mapsto U\ket{\psi}.$$
+</div>
+
+<p>La linealidad es el <strong>principio de superposición</strong>: si $\ket{\psi_1}$ y $\ket{\psi_2}$ son estados posibles, también lo es cualquier combinación normalizada de ellos, y $U$ actúa sobre cada parte por separado. La unitariedad garantiza que las probabilidades sigan sumando 1, y que toda evolución se pueda deshacer con $U^\dagger$: es la versión cuántica de la computación <a href="@ch:bits">reversible</a>.</p>
+
+<h2>El término de interferencia</h2>
+
+<p>Supongamos que a un resultado se puede llegar por dos caminos, con amplitudes $a$ y $b$. La mecánica cuántica suma las amplitudes y solo después eleva al cuadrado:</p>
+
+$$|a + b|^2 = \underbrace{|a|^2 + |b|^2}_{\text{clásico}} + \underbrace{2\,\mathrm{Re}\left(\overline{a}\,b\right)}_{\text{interferencia}}.$$
+
+<p>El último término puede ser positivo (interferencia <strong>constructiva</strong>) o negativo (<strong>destructiva</strong>). Si $b = -a$, el resultado se vuelve imposible aunque cada camino, por sí solo, llegaría a él. Richard Feynman convirtió esta regla en el punto de partida de su formulación de la mecánica cuántica (1948): la amplitud de un proceso es la <strong>suma sobre todos los caminos</strong> del producto de las amplitudes a lo largo de cada camino.</p>
+
+<div class="theorem">
+  <span class="th-title">Proposición <span class="th-name">(las probabilidades clásicas nunca se anulan)</span></span>
+  <p>Si $S_1, \dots, S_k$ son matrices estocásticas, la probabilidad de llegar a un resultado es una suma, sobre caminos, de productos de números no negativos. Añadir un camino nuevo solo puede aumentarla.</p>
+</div>
+
+<p>Esta es toda la diferencia. Un algoritmo aleatorio solo puede acumular probabilidad en las respuestas buenas; un algoritmo cuántico puede, además, <em>quitar</em> probabilidad a las malas haciendo que sus caminos se anulen entre sí.</p>
+
+<h2>Una moneda cuántica</h2>
+
+<p>La <strong>puerta de Hadamard</strong> es la versión cuántica de lanzar una moneda:</p>
+
+$$H = \frac{1}{\sqrt2}\begin{pmatrix} 1 & 1 \\ 1 & -1\end{pmatrix}, \qquad H\ket{0} = \ket{+} = \frac{\ket{0} + \ket{1}}{\sqrt2}, \qquad H\ket{1} = \ket{-} = \frac{\ket{0} - \ket{1}}{\sqrt2}.$$
+
+<p>Aplicada a $\ket{0}$ da una superposición al 50 %. Una moneda aleatoria clásica aplicada dos veces sigue dando 50 %. La moneda cuántica aplicada dos veces devuelve exactamente el estado inicial.</p>
+
+<div class="theorem">
+  <span class="th-title">Proposición <span class="th-name">($H^2 = I$)</span></span>
+  $$H H \ket{0} = \frac{1}{\sqrt2}\left(H\ket{0} + H\ket{1}\right) = \frac{1}{2}\left(\ket{0} + \ket{1} + \ket{0} - \ket{1}\right) = \ket{0}.$$
+</div>
+
+<p>Los dos caminos que llevan a $\ket{1}$ tienen amplitudes $+\tfrac12$ y $-\tfrac12$ y se anulan; los dos que llevan a $\ket{0}$ se suman. El azar de la primera moneda no era ignorancia sobre un resultado oculto: era una superposición, y las superposiciones se pueden deshacer.</p>
+
+<h2 id="mach-zehnder">El interferómetro de Mach-Zehnder</h2>
+
+<p>El mismo circuito se puede construir con luz: un divisor de haz (que actúa como $H$), dos brazos y un segundo divisor. Si un brazo añade un retraso de fase $\varphi$, el circuito es $H \cdot P(\varphi) \cdot H$, con $P(\varphi) = \mathrm{diag}(1, e^{i\varphi})$.</p>
+
+<div class="theorem">
+  <span class="th-title">Proposición <span class="th-name">(interferómetro)</span></span>
+  <p>Partiendo de $\ket{0}$, la salida de $H\,P(\varphi)\,H$ se detecta en 0 con probabilidad</p>
+  $$P(0) = \left|\frac{1 + e^{i\varphi}}{2}\right|^2 = \cos^2\frac{\varphi}{2}.$$
+</div>
+
+<figure class="demo wide" data-demo="interference/interferometer">
+  <figcaption>Cada salida recibe dos contribuciones, una por brazo. Las flechas muestran las dos amplitudes como números complejos y su suma. Con $\varphi = 0$ se refuerzan en el detector 0 y se anulan en el 1; con $\varphi = \pi$ ocurre lo contrario. La partícula nunca se divide: en cada disparo salta exactamente un detector, pero las probabilidades siguen la interferencia.</figcaption>
+</figure>
+
+<h2>Paseos cuánticos</h2>
+
+<p>La interferencia tiene efectos llamativos incluso en procesos sencillos. En un <strong>paseo aleatorio</strong> clásico, un caminante lanza una moneda en cada paso y se mueve a la izquierda o a la derecha: tras $t$ pasos, su distancia típica al origen crece como $\sqrt{t}$, por el teorema central del límite. En un <strong>paseo cuántico</strong> (Aharonov, Davidovich y Zagury, 1993; Ambainis et al., 2001) la moneda es un qubit, se le aplica la puerta de Hadamard y el caminante se mueve a izquierda o derecha <em>en superposición</em> según la moneda.</p>
+
+<figure class="demo wide" data-demo="interference/walk">
+  <figcaption>Distribución de la posición tras $t$ pasos. El paseo clásico (gris) es la conocida campana, de anchura $\sqrt{t}$. El cuántico (color) tiene una forma irregular con dos picos que se alejan a velocidad constante: su dispersión crece como $t$, cuadráticamente más deprisa. Los caminos que vuelven al centro se anulan entre sí.</figcaption>
+</figure>
+
+<div class="theorem">
+  <span class="th-title">Teorema <span class="th-name">(dispersión balística; Ambainis et al., 2001)</span></span>
+  <p>Para el paseo de Hadamard en la recta, la desviación típica de la posición tras $t$ pasos crece linealmente, $\sigma_t = \Theta(t)$, mientras que en el paseo aleatorio clásico $\sigma_t = \sqrt{t}$.</p>
+</div>
+
+<p>Esta diferencia cuadrática es la misma que aparecerá en el <a href="@ch:grover">algoritmo de Grover</a>, y los paseos cuánticos son la base de varios algoritmos con aceleraciones exponenciales para problemas sobre grafos. La lección general: un ordenador cuántico no prueba todas las respuestas a la vez. Coreografía la interferencia para que los caminos hacia las respuestas equivocadas se anulen.</p>
+
+<section class="references">
+  <h2>Referencias</h2>
+  <ol>
+    <li>T. Young (1804). «The Bakerian Lecture: Experiments and Calculations Relative to Physical Optics». <em>Philosophical Transactions of the Royal Society</em>, 94.</li>
+    <li>R. P. Feynman (1948). «Space-Time Approach to Non-Relativistic Quantum Mechanics». <em>Reviews of Modern Physics</em>, 20(2).</li>
+    <li>A. Tonomura et al. (1989). «Demonstration of single-electron buildup of an interference pattern». <em>American Journal of Physics</em>, 57(2).</li>
+    <li>Y. Aharonov, L. Davidovich y N. Zagury (1993). «Quantum random walks». <em>Physical Review A</em>, 48(2).</li>
+    <li>A. Ambainis, E. Bach, A. Nayak, A. Vishwanath y J. Watrous (2001). «One-dimensional quantum walks». <em>STOC</em>.</li>
+  </ol>
+</section>

@@ -1,0 +1,123 @@
+<!--meta
+{
+  "slug": "bits",
+  "title": "Bits",
+  "chain": "Bit",
+  "headline": "From bits to vectors",
+  "dek": "Before the qubit there was the bit. Rewriting classical computation as linear algebra (bits as vectors, logic gates as matrices, randomness as probability vectors) reveals exactly what quantum mechanics changes: one norm for another.",
+  "era": "1937 – 1980",
+  "people": ["Claude Shannon", "Rolf Landauer", "Charles Bennett", "Tommaso Toffoli"],
+  "theorems": ["Universality of NAND", "Landauer's principle", "Reversible universality (Toffoli)", "Isometries of $\\ell_p$"]
+}
+-->
+
+<p>In 1937 a 21-year-old MIT student, Claude Shannon, showed in his master's thesis that the relay circuits of telephone exchanges obey the algebra George Boole had invented in 1854 to formalize logic. Every computer since then manipulates <strong>bits</strong>, quantities that are either 0 or 1, with logic gates. To understand what is new about quantum computing we first have to look at the classical bit with different eyes: as a vector.</p>
+
+<h2>Boolean circuits</h2>
+
+<p>A gate takes bits and returns bits: $\mathrm{NOT}(x) = 1 - x$, $\mathrm{AND}(x, y) = xy$, $\mathrm{NAND}(x,y) = 1 - xy$. A <strong>circuit</strong> wires gates together, and computes a function $f : \{0,1\}^n \to \{0,1\}^m$. A single type of gate is enough to build all of them.</p>
+
+<div class="theorem">
+  <span class="th-title">Theorem <span class="th-name">(universality of NAND)</span></span>
+  <p>Every Boolean function $f : \{0,1\}^n \to \{0,1\}$ can be computed by a circuit made only of NAND gates.</p>
+</div>
+
+<details class="proof">
+  <summary>Proof</summary>
+  <div>
+    <p>Write $f$ in disjunctive normal form: an OR, over the inputs $a$ with $f(a) = 1$, of the AND of literals $x_i$ or $\neg x_i$ that is true only at $a$. So NOT, AND and OR suffice. And each of them is made of NANDs: $\neg x = \mathrm{NAND}(x, x)$, $\;x \wedge y = \neg\,\mathrm{NAND}(x,y)$, $\;x \vee y = \mathrm{NAND}(\neg x, \neg y)$ (De Morgan).</p>
+  </div>
+</details>
+
+<p>The proof hides a warning that will matter later: the normal form can have exponentially many terms. Being able to compute a function says nothing about computing it <em>efficiently</em>. Whether quantum computers can compute efficiently what classical ones cannot is the question running through this whole site.</p>
+
+<h2>Information is physical</h2>
+
+<p>An AND gate destroys information: from the output 0 you cannot tell whether the input was 00, 01 or 10. In 1961 Rolf Landauer, at IBM, showed that this has an unavoidable physical price.</p>
+
+<div class="theorem">
+  <span class="th-title">Principle <span class="th-name">(Landauer, 1961)</span></span>
+  <p>Erasing one bit of information in an environment at temperature $T$ dissipates at least</p>
+  $$E \ge k_B\, T \ln 2$$
+  <p>of heat, where $k_B$ is Boltzmann's constant (about $3 \times 10^{-21}$ joules at room temperature).</p>
+</div>
+
+<p>In 1973 Charles Bennett showed that this cost is not inevitable: every computation can be done <strong>reversibly</strong>, without erasing anything, by keeping enough extra bits and “uncomputing” the intermediate results at the end. In 1980 Tommaso Toffoli found the gate that makes it practical.</p>
+
+<div class="theorem">
+  <span class="th-title">Theorem <span class="th-name">(reversible universality; Toffoli, 1980)</span></span>
+  <p>The Toffoli gate $\;T(a, b, c) = (a,\; b,\; c \oplus ab)\;$ is reversible (it is its own inverse) and, with auxiliary bits fixed to 0 or 1, every Boolean function can be computed by a circuit of Toffoli gates.</p>
+</div>
+
+<details class="proof">
+  <summary>Proof</summary>
+  <div>
+    <p>Applying $T$ twice gives $c \oplus ab \oplus ab = c$, so $T$ is its own inverse. With $c = 1$ the third output is $1 \oplus ab = \mathrm{NAND}(a, b)$, and with $b = 1, c = 0$ it copies $a$ (fan-out). By the universality of NAND, every circuit can be simulated.</p>
+  </div>
+</details>
+
+<p>This detail is crucial: as we will see, the evolution of a quantum system is always reversible. Toffoli's theorem guarantees that a quantum computer can do at least everything a classical one does.</p>
+
+<h2>Bits as vectors</h2>
+
+<p>Now the change of perspective. Represent the bit 0 by the vector $\ket{0} = \binom{1}{0}$ and the bit 1 by $\ket{1} = \binom{0}{1}$ (the notation $\ket{\cdot}$, due to Dirac, will reappear constantly). Then NOT is a matrix:</p>
+
+$$X = \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}, \qquad X\ket{0} = \ket{1}, \qquad X\ket{1} = \ket{0}.$$
+
+<p>With $n$ bits there are $2^n$ possible configurations, and each one is a basis vector of a space of dimension $2^n$. A deterministic reversible circuit is a <strong>permutation matrix</strong> that shuffles those basis vectors. It sounds like an extravagant way of describing something simple, until we add randomness.</p>
+
+<h2 id="probabilistic">Probabilistic bits</h2>
+
+<p>A coin in the air is a bit we do not know. We describe it with a <strong>probability vector</strong> $\mathbf{p} = (p_0, p_1)$, with $p_i \ge 0$ and $p_0 + p_1 = 1$. In other words, a vector with non-negative entries and <strong>1-norm</strong> equal to 1: $\|\mathbf{p}\|_1 = |p_0| + |p_1| = 1$. Random operations are matrices too.</p>
+
+<div class="theorem">
+  <span class="th-title">Proposition <span class="th-name">(stochastic matrices)</span></span>
+  <p>A matrix $S$ maps every probability vector to a probability vector if and only if it is <strong>stochastic</strong>: non-negative entries and each column summing to 1.</p>
+</div>
+
+<details class="proof">
+  <summary>Proof</summary>
+  <div>
+    <p>Applying $S$ to the basis vector $\mathbf{e}_j$ gives column $j$, which must be a probability vector. Conversely, $S\mathbf{p}$ is a convex combination of the columns, which are probability vectors, and the set of probability vectors is convex.</p>
+  </div>
+</details>
+
+<p>A stochastic matrix can only <em>mix</em>: it takes points of the segment $p_0 + p_1 = 1$ towards its interior and, unless it is a permutation, cannot be undone without losing the guarantee of non-negativity. Uncertainty grows; it never shrinks. Is there something smoother, which allows us to go from 0 to 1 continuously <em>and reversibly</em>? Here is the first surprise.</p>
+
+<div class="theorem">
+  <span class="th-title">Proposition <span class="th-name">(NOT has no stochastic square root)</span></span>
+  <p>There is no stochastic $2 \times 2$ matrix $S$ such that $S^2 = X$.</p>
+</div>
+
+<details class="proof">
+  <summary>Proof</summary>
+  <div>
+    <p>Write $S = \begin{pmatrix} a & b \\ 1-a & 1-b \end{pmatrix}$ with $a, b \in [0, 1]$. The top-left entry of $S^2$ is $a^2 + b(1-a)$, which must be 0. Both terms are non-negative, so $a = 0$ and $b = 0$. But then $S = \begin{pmatrix} 0 & 0 \\ 1 & 1\end{pmatrix}$ and $S^2 = S \neq X$.</p>
+  </div>
+</details>
+
+<p>With the <strong>2-norm</strong> the story is different. If instead of probabilities we use vectors $(\alpha, \beta)$ with $\alpha^2 + \beta^2 = 1$, a 45° rotation applied twice is a 90° rotation, which takes $\ket{0}$ to $\ket{1}$. This is not an accident: of all the ways of measuring length, only one allows continuous reversible transformations.</p>
+
+<div class="theorem">
+  <span class="th-title">Theorem <span class="th-name">(isometries of $\ell_p$)</span></span>
+  <p>Let $n \ge 2$ and $p \ge 1$ with $p \neq 2$. Every linear map $A : \mathbb{R}^n \to \mathbb{R}^n$ that preserves the norm $\|\mathbf{x}\|_p = \left(\sum_i |x_i|^p\right)^{1/p}$ is a <strong>signed permutation</strong> matrix. For $p = 2$, on the other hand, the isometries are all the orthogonal matrices (all the rotations and reflections), a continuous family.</p>
+</div>
+
+<figure class="demo wide" data-demo="bits/norms">
+  <figcaption>The same slider, two worlds. <strong>Left:</strong> a probabilistic bit (1-norm) to which we apply a “partial flip” stochastic matrix twice. <strong>Right:</strong> a vector of 2-norm 1 to which we apply a rotation twice. At $t = 0.5$ the classical bit ends at 50/50, and that information is lost forever; the vector ends exactly at $\ket{1}$: it is a square root of NOT. Dashed lines show the unit “circle” of each norm.</figcaption>
+</figure>
+
+<aside class="note">This idea, that quantum mechanics is “probability theory with the 2-norm instead of the 1-norm”, is the way Scott Aaronson presents it in <em>Quantum Computing Since Democritus</em> (2013).</aside>
+
+<p>Quantum mechanics is, at its mathematical core, what you get by taking that step: describe the state of a bit by a vector of <strong>2-norm</strong> 1, with entries that may be negative and even <strong>complex</strong>. Those entries are not probabilities but <em>amplitudes</em>, and the probabilities are their squared moduli. That is the <a href="@ch:qubits">qubit</a>.</p>
+
+<section class="references">
+  <h2>References</h2>
+  <ol>
+    <li>C. E. Shannon (1938). “A Symbolic Analysis of Relay and Switching Circuits”. <em>Transactions of the AIEE</em>, 57(12).</li>
+    <li>R. Landauer (1961). “Irreversibility and Heat Generation in the Computing Process”. <em>IBM Journal of Research and Development</em>, 5(3).</li>
+    <li>C. H. Bennett (1973). “Logical Reversibility of Computation”. <em>IBM Journal of Research and Development</em>, 17(6).</li>
+    <li>T. Toffoli (1980). “Reversible Computing”. <em>ICALP</em>, LNCS 85.</li>
+    <li>S. Aaronson (2013). <em>Quantum Computing Since Democritus</em>. Cambridge University Press.</li>
+  </ol>
+</section>

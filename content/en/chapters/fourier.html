@@ -1,0 +1,113 @@
+<!--meta
+{
+  "slug": "fourier",
+  "title": "Quantum Fourier transform",
+  "chain": "Fourier",
+  "headline": "Finding hidden periods",
+  "dek": "Fourier taught us to break any signal into frequencies. Its quantum version acts on $2^n$ amplitudes with only about $n^2$ gates, exponentially fewer than the fast classical algorithm. Coupled with interference, it turns hidden periodicity into peaks that can be measured.",
+  "era": "1807 – 1998",
+  "people": ["Joseph Fourier", "James Cooley", "John Tukey", "Ethan Bernstein", "Umesh Vazirani", "Daniel Simon", "Don Coppersmith", "Alexei Kitaev"],
+  "theorems": ["Unitarity of the QFT", "Product representation", "Fourier transform of periodic states", "Phase estimation"]
+}
+-->
+
+<p>In 1807 Joseph Fourier claimed, studying the propagation of heat, that any function can be written as a sum of sines and cosines. Two centuries later the discrete version of his idea is everywhere: compressing images, filtering audio, multiplying large numbers. In 1965 James Cooley and John Tukey rediscovered the <strong>fast Fourier transform</strong> (FFT), which computes the transform of $N$ numbers in $O(N\log N)$ operations. The quantum version is exponentially faster still, with a catch that we will have to learn to get around.</p>
+
+<h2>The discrete and the quantum transform</h2>
+
+<p>Let $N = 2^n$ and $\omega = e^{2\pi i/N}$, a primitive $N$-th root of unity. The <strong>quantum Fourier transform</strong> is the linear map defined on the computational basis by</p>
+
+$$\mathrm{QFT}\ket{j} = \frac{1}{\sqrt N}\sum_{k=0}^{N-1} \omega^{jk}\ket{k}, \qquad j = 0, \dots, N-1.$$
+
+<p>Applied to a state $\sum_j x_j\ket{j}$, it produces the discrete Fourier transform of the amplitudes, $\sum_k y_k \ket{k}$ with $y_k = \frac{1}{\sqrt N}\sum_j \omega^{jk}x_j$.</p>
+
+<div class="theorem">
+  <span class="th-title">Proposition <span class="th-name">(the QFT is unitary)</span></span>
+  <p>The columns of the QFT matrix are orthonormal, so it is a valid quantum gate.</p>
+</div>
+
+<details class="proof">
+  <summary>Proof</summary>
+  <div>
+    <p>The inner product of columns $j$ and $j'$ is $\frac{1}{N}\sum_{k=0}^{N-1}\omega^{(j'-j)k}$. If $j = j'$ it is 1. Otherwise $q = \omega^{j'-j} \neq 1$ is an $N$-th root of unity and the geometric sum $\sum_k q^k = \frac{q^N - 1}{q - 1} = 0$.</p>
+  </div>
+</details>
+
+<p>For $N = 2$, the QFT is exactly the <a href="@ch:interference">Hadamard gate</a>. And applying $H$ to each of $n$ qubits is the Fourier transform over the group $(\mathbb{Z}_2)^n$: the Deutsch–Jozsa algorithm was already a Fourier transform in disguise.</p>
+
+<h2>An exponentially small circuit</h2>
+
+<p>The key to its efficiency is that the QFT of a basis state does not create entanglement: it factorizes into $n$ separate qubits. Write $j$ in binary as $j = j_1 j_2 \dots j_n$ and $0.j_l j_{l+1}\dots j_n$ for the binary fraction $\sum_{m\ge l} j_m 2^{l-m-1}$.</p>
+
+<div class="theorem">
+  <span class="th-title">Theorem <span class="th-name">(product representation)</span></span>
+  $$\mathrm{QFT}\ket{j_1\dots j_n} = \frac{\left(\ket{0} + e^{2\pi i\, 0.j_n}\ket{1}\right)\otimes\left(\ket{0} + e^{2\pi i\, 0.j_{n-1}j_n}\ket{1}\right)\otimes\cdots\otimes\left(\ket{0} + e^{2\pi i\, 0.j_1 j_2\dots j_n}\ket{1}\right)}{2^{n/2}}.$$
+</div>
+
+<details class="proof">
+  <summary>Proof sketch</summary>
+  <div>
+    <p>Write $k = \sum_{l=1}^n k_l 2^{n-l}$. Then $\omega^{jk} = \prod_l e^{2\pi i\, j k_l/2^l}$, and the sum over $k$ factors into a product of sums over each bit $k_l \in \{0,1\}$. In $e^{2\pi i j/2^l}$ only the last $l$ bits of $j$ matter, because the others contribute integer multiples of $2\pi i$.</p>
+  </div>
+</details>
+
+<p>Each factor is prepared with a Hadamard gate and a few controlled phase rotations, $R_k = \mathrm{diag}(1, e^{2\pi i/2^k})$. In total $n(n+1)/2$ gates, plus a reversal of the order of the qubits: $O(n^2)$ operations to transform $2^n$ amplitudes, against the FFT's $O(n\,2^n)$. Coppersmith (1994) also showed that the smallest rotations can be dropped without significant loss, leaving $O(n\log n)$ gates.</p>
+
+<aside class="note">The catch: the amplitudes are not accessible. The QFT computes the transform, but measuring yields a single value $k$ with probability $|y_k|^2$. It is only useful if the transform concentrates the probability on a few informative values.</aside>
+
+<h2 id="periodic">Periodicity becomes peaks</h2>
+
+<p>That is exactly what happens with periodic states, the situation that matters for <a href="@ch:shor">Shor's algorithm</a>.</p>
+
+<div class="theorem">
+  <span class="th-title">Theorem <span class="th-name">(transform of a periodic state)</span></span>
+  <p>Let $r$ divide $N$ and $m = N/r$. The state that is uniform over an arithmetic progression of step $r$,</p>
+  $$\ket{\psi} = \frac{1}{\sqrt m}\sum_{s=0}^{m-1}\ket{x_0 + sr},$$
+  <p>is transformed into a uniform superposition over the multiples of $m$: measuring after the QFT gives $k = \ell\, N/r$ with $\ell$ uniform in $\{0, \dots, r-1\}$, whatever the offset $x_0$.</p>
+</div>
+
+<details class="proof">
+  <summary>Proof</summary>
+  <div>
+    <p>The amplitude of $\ket{k}$ is $\frac{1}{\sqrt{Nm}}\,\omega^{x_0 k}\sum_{s=0}^{m-1}\left(\omega^{rk}\right)^s$. Now $\omega^{rk} = e^{2\pi i k/m}$ is an $m$-th root of unity. If $m$ divides $k$ it equals 1 and the sum is $m$, which gives probability $\frac{m^2}{Nm} = \frac{1}{r}$. Otherwise the geometric sum is 0. The offset only contributes the phase $\omega^{x_0k}$, which does not change the probabilities.</p>
+  </div>
+</details>
+
+<figure class="demo wide" data-demo="fourier/qft">
+  <figcaption>A state on 6 qubits ($N = 64$) that is uniform over a progression with period $r$ (top) and its quantum Fourier transform (bottom, colours = phase). When $r$ divides 64 the output is a perfect comb of $r$ peaks separated by $64/r$. When it does not, the peaks blur a little but stay near the multiples of $64/r$, enough to recover $r$, as Shor's algorithm will do. Moving the offset changes only the phases.</figcaption>
+</figure>
+
+<h2>Hidden structure in a single query</h2>
+
+<p>The same idea gave the first separations between quantum and classical computation, in the model where a function $f$ can only be consulted as a black box.</p>
+
+<p><strong>Bernstein–Vazirani (1993).</strong> Let $f(x) = s\cdot x \bmod 2$ for a secret string $s \in \{0,1\}^n$. Classically, each query reveals at most one bit of information about $s$, so $n$ queries are needed. Quantumly, a single one is enough: prepare $H^{\otimes n}\ket{0}$, apply the oracle as a phase $(-1)^{s\cdot x}$, and apply $H^{\otimes n}$ again. Since $H^{\otimes n}\sum_x (-1)^{s\cdot x}\ket{x} = 2^{n/2}\ket{s}$, measuring yields $s$ with certainty.</p>
+
+<figure class="demo wide" data-demo="fourier/bv">
+  <figcaption>The Bernstein–Vazirani problem. Choose a secret string. The classical strategy queries $f$ at $e_1, e_2, \dots$, one bit per query; the quantum circuit asks once, with every input in superposition, and the interference of the phases $(-1)^{s\cdot x}$ leaves exactly $\ket{s}$.</figcaption>
+</figure>
+
+<p><strong>Simon (1994).</strong> If $f(x) = f(y)$ exactly when $y = x$ or $y = x\oplus s$, finding $s$ requires $\Omega(2^{n/2})$ queries for any classical algorithm, even a randomized one, and $O(n)$ for a quantum one: the first <em>exponential</em> separation against randomized algorithms. Daniel Simon's paper is what inspired Peter Shor.</p>
+
+<h2>Phase estimation</h2>
+
+<p>Alexei Kitaev (1995) reformulated these ideas into a general tool. Suppose a unitary $U$ and one of its eigenvectors $\ket{u}$ with $U\ket{u} = e^{2\pi i\varphi}\ket{u}$. Using $t$ auxiliary qubits, the gates controlled-$U^{2^j}$ write the phase $\varphi$ into the amplitudes as $\frac{1}{2^{t/2}}\sum_y e^{2\pi i\varphi y}\ket{y}$, and an inverse QFT turns it into a binary number.</p>
+
+<div class="theorem">
+  <span class="th-title">Theorem <span class="th-name">(phase estimation)</span></span>
+  <p>With $t$ qubits, the measurement returns the closest $t$-bit approximation to $\varphi$ with probability at least $4/\pi^2 \approx 0.405$; with $t + O(\log(1/\varepsilon))$ qubits, an approximation to $t$ bits with probability at least $1 - \varepsilon$. If $\varphi$ has an exact $t$-bit expansion, the result is certain.</p>
+</div>
+
+<p>Phase estimation is at the heart of Shor's algorithm, of quantum chemistry (estimating energies, the eigenvalues of a Hamiltonian) and of the algorithms for linear systems. The next chapter puts it to work on the problem that made quantum computing famous.</p>
+
+<section class="references">
+  <h2>References</h2>
+  <ol>
+    <li>J. W. Cooley and J. W. Tukey (1965). “An Algorithm for the Machine Calculation of Complex Fourier Series”. <em>Mathematics of Computation</em>, 19(90).</li>
+    <li>E. Bernstein and U. Vazirani (1993). “Quantum complexity theory”. <em>STOC</em>.</li>
+    <li>D. R. Simon (1994). “On the power of quantum computation”. <em>FOCS</em> (journal version: <em>SIAM J. Computing</em>, 1997).</li>
+    <li>D. Coppersmith (1994). “An approximate Fourier transform useful in quantum factoring”. IBM Research Report RC19642.</li>
+    <li>A. Y. Kitaev (1995). “Quantum measurements and the Abelian Stabilizer Problem”. arXiv:quant-ph/9511026.</li>
+    <li>R. Cleve, A. Ekert, C. Macchiavello and M. Mosca (1998). “Quantum algorithms revisited”. <em>Proceedings of the Royal Society A</em>, 454.</li>
+  </ol>
+</section>

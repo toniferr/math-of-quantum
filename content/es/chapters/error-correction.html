@@ -1,0 +1,112 @@
+<!--meta
+{
+  "slug": "correccion-errores",
+  "title": "Errores y decoherencia",
+  "chain": "Corrección",
+  "headline": "Proteger lo que no se puede copiar",
+  "dek": "Los qubits son frágiles: cualquier interacción con el entorno degrada sus superposiciones. Durante años pareció imposible protegerlos, porque no se pueden copiar ni mirar. Los códigos cuánticos de corrección de errores y el teorema del umbral mostraron cómo hacerlo, y en 2024 un experimento cruzó el umbral por primera vez.",
+  "era": "1995 – 2024",
+  "people": ["Peter Shor", "Andrew Steane", "Emanuel Knill", "Raymond Laflamme", "Daniel Gottesman", "Alexei Kitaev", "Dorit Aharonov", "John Preskill"],
+  "theorems": ["Representación de Kraus", "Discretización de los errores", "Condiciones de Knill-Laflamme", "Teorema del umbral"]
+}
+-->
+
+<p>Un bit clásico en memoria puede permanecer intacto durante años. Un qubit superconductor conserva su superposición, como mucho, alrededor de un milisegundo. El culpable es la <strong>decoherencia</strong>: el qubit interactúa inevitablemente con su entorno (fotones perdidos, vibraciones, defectos del material), se entrelaza con él y, desde nuestro punto de vista, su estado puro se convierte en una mezcla. Construir un ordenador cuántico útil es, ante todo, una lucha contra la decoherencia.</p>
+
+<h2>El ruido como canal cuántico</h2>
+
+<p>La evolución más general de un sistema abierto no es un unitario sobre el qubit solo, sino un <strong>canal cuántico</strong>: una aplicación lineal sobre matrices densidad que conserva la traza y la positividad, incluso cuando el sistema forma parte de otro mayor.</p>
+
+<div class="theorem">
+  <span class="th-title">Teorema <span class="th-name">(representación de Kraus; Choi 1975, Kraus 1983)</span></span>
+  <p>Una aplicación $\mathcal{E}$ es un canal cuántico si y solo si existen matrices $K_1, \dots, K_m$ con $\sum_j K_j^\dagger K_j = I$ tales que</p>
+  $$\mathcal{E}(\rho) = \sum_{j=1}^{m} K_j\,\rho\,K_j^\dagger.$$
+</div>
+
+<p>Tres canales recogen lo esencial del ruido en un qubit:</p>
+
+<ul>
+  <li><strong>Desfase</strong> ($T_2$): con probabilidad $p$ se aplica una $Z$. Se pierde la fase relativa: el vector de Bloch se encoge hacia el eje $z$, y las superposiciones se convierten en mezclas clásicas.</li>
+  <li><strong>Amortiguamiento de amplitud</strong> ($T_1$): el qubit decae de $\ket{1}$ a $\ket{0}$ emitiendo energía, $K_0 = \begin{pmatrix} 1 & 0\\ 0 & \sqrt{1-\gamma}\end{pmatrix}$, $K_1 = \begin{pmatrix} 0 & \sqrt\gamma\\ 0 & 0\end{pmatrix}$. Toda la esfera es arrastrada hacia el polo norte.</li>
+  <li><strong>Despolarizante</strong>: con probabilidad $p$ el estado se sustituye por el máximamente mezclado. La bola se encoge uniformemente hacia su centro.</li>
+</ul>
+
+<figure class="demo wide" data-demo="error-correction/decoherence">
+  <figcaption>La decoherencia en la esfera de Bloch. Elige un canal y deja pasar el tiempo: la nube de estados iniciales (la superficie de la esfera) se deforma en un elipsoide interior. Todo canal de un qubit actúa como una contracción afín de la bola de Bloch. Se pierde la pureza y, con ella, la capacidad de interferir.</figcaption>
+</figure>
+
+<h2>Por qué parecía imposible</h2>
+
+<p>La corrección de errores clásica se basa en la redundancia: enviar $000$ en lugar de $0$ y decidir por mayoría. Con qubits, tres obstáculos parecían insalvables:</p>
+
+<ol>
+  <li><strong>No hay copias.</strong> El <a href="@ch:measurement#no-clonacion">teorema de no clonación</a> prohíbe triplicar un estado desconocido.</li>
+  <li><strong>Medir destruye.</strong> Comprobar si un qubit ha sufrido un error colapsa su superposición.</li>
+  <li><strong>Los errores son continuos.</strong> Un qubit no solo se invierte: puede girar cualquier ángulo pequeño, una familia infinita de errores.</li>
+</ol>
+
+<p>En 1995 Peter Shor superó los tres con un código de nueve qubits. Las ideas clave se ven en un código más sencillo.</p>
+
+<h2>El código de tres qubits</h2>
+
+<p>No codificamos copias, sino un estado <em>entrelazado</em>, que sí está permitido:</p>
+
+$$\alpha\ket{0} + \beta\ket{1} \;\longmapsto\; \alpha\ket{000} + \beta\ket{111}.$$
+
+<p>Si un qubit se invierte por un error $X$, no medimos los qubits (eso destruiría $\alpha$ y $\beta$). Medimos las <strong>paridades</strong> $Z_1Z_2$ y $Z_2Z_3$: si los dos primeros qubits coinciden y si coinciden los dos últimos. Esos dos bits, el <strong>síndrome</strong>, identifican qué qubit falló (o que ninguno lo hizo) y no revelan absolutamente nada sobre $\alpha$ y $\beta$, porque las dos componentes de la superposición dan la misma respuesta. Aplicar $X$ al qubit defectuoso restaura el estado.</p>
+
+<div class="theorem">
+  <span class="th-title">Teorema <span class="th-name">(discretización de los errores)</span></span>
+  <p>Si un código corrige un conjunto de errores $\{E_a\}$, corrige todo error que sea combinación lineal de ellos. En particular, un código que corrige $X$, $Z$ e $Y = iXZ$ sobre cualquier qubit corrige <strong>cualquier</strong> error, incluso continuo, que afecte a un solo qubit.</p>
+</div>
+
+<p>Medir el síndrome obliga a un error continuo a «decidir» qué error discreto fue. Combinando la protección frente a $X$ (inversiones de bit) y frente a $Z$ (inversiones de fase), el código de Shor anida un código de tres qubits dentro de otro y protege un qubit lógico con nueve físicos. Steane (1996) encontró uno de siete, y Laflamme, Miquel, Paz y Zurek (1996) el más pequeño posible, de cinco.</p>
+
+<div class="theorem">
+  <span class="th-title">Teorema <span class="th-name">(condiciones de Knill-Laflamme, 1997)</span></span>
+  <p>Sea $P$ el proyector sobre el espacio del código. El código corrige el conjunto de errores $\{E_a\}$ si y solo si, para todos $a, b$,</p>
+  $$P\,E_a^\dagger E_b\,P = c_{ab}\,P$$
+  <p>para ciertos números $c_{ab}$: los errores no deben distorsionar el espacio del código de una forma que dependa de la información codificada.</p>
+</div>
+
+<figure class="demo wide" data-demo="error-correction/repetition">
+  <figcaption>El código de repetición con $d$ copias, decodificado por mayoría, frente a errores independientes con probabilidad $p$ por qubit. Cuando $p$ es pequeño, aumentar $d$ suprime el error lógico de forma exponencial; cuando $p$ es grande, lo empeora. Las curvas se cruzan en el <strong>umbral</strong> (aquí $p = 1/2$; en los códigos cuánticos reales, con medidas ruidosas, ronda el 1 %). Simula para ver las votaciones.</figcaption>
+</figure>
+
+<h2>El teorema del umbral</h2>
+
+<p>Corregir errores exige más puertas, y esas puertas también fallan. ¿Podría la corrección introducir más errores de los que elimina? La respuesta, que encontraron de forma independiente varios grupos entre 1996 y 1998, es el resultado más importante del campo.</p>
+
+<div class="theorem">
+  <span class="th-title">Teorema <span class="th-name">(umbral; Aharonov-Ben-Or, Kitaev, Knill-Laflamme-Zurek)</span></span>
+  <p>Existe una constante $p_{\mathrm{th}} > 0$ tal que, si cada componente elemental falla de forma independiente con probabilidad $p < p_{\mathrm{th}}$, cualquier circuito cuántico de $T$ puertas se puede ejecutar con error final como mucho $\varepsilon$ usando $O\big(T\,\mathrm{polylog}(T/\varepsilon)\big)$ puertas.</p>
+</div>
+
+<p>La idea es la concatenación: codificar cada qubit en un código, cada qubit del código en otro código, y así sucesivamente. Si un nivel reduce la tasa de error de $p$ a $cp^2$, $L$ niveles la reducen a $(cp)^{2^L}/c$, un descenso doblemente exponencial, siempre que $cp < 1$. Por debajo del umbral, el ruido se puede vencer; por encima, nada funciona.</p>
+
+<h2>Códigos de superficie y el presente</h2>
+
+<p>El formalismo de <strong>estabilizadores</strong> (Gottesman, 1997) describió los códigos por los operadores de Pauli que dejan invariantes, y los códigos topológicos de Alexei Kitaev (1997) llevaron al <strong>código de superficie</strong>: qubits en una rejilla bidimensional en la que solo se miden paridades entre vecinos, con un umbral cercano al 1 %. Con distancia $d$ usa unos $2d^2$ qubits físicos por qubit lógico y, por debajo del umbral, el error lógico cae exponencialmente con $d$.</p>
+
+<p>Durante décadas fue teoría. En diciembre de 2024 Google Quantum AI publicó la primera demostración convincente de funcionamiento por debajo del umbral: con su procesador <em>Willow</em>, aumentar la distancia de un código de superficie de 3 a 5 y de 5 a 7 redujo a la mitad la tasa de error lógico en cada paso (un factor de supresión $\Lambda \approx 2{,}1$). Por las mismas fechas, equipos que trabajan con átomos neutros e iones atrapados presentaron procesadores con decenas de qubits lógicos. La era que John Preskill llamó <strong>NISQ</strong> en 2018 (<em>noisy intermediate-scale quantum</em>) ha empezado a dejar paso a la era de la tolerancia a fallos.</p>
+
+<div class="idea">
+  <span class="th-title">La cadena completa</span>
+  <p>Los bits se convirtieron en vectores; cambiar la norma 1 por la norma 2 dio el qubit; las amplitudes que pueden anularse dieron la interferencia; la medida extrajo información; el producto tensorial dio el entrelazamiento; las puertas unitarias dieron un lenguaje de programación; la transformada de Fourier y la amplificación de amplitud dieron los algoritmos; y los códigos de corrección de errores dan la esperanza de ejecutarlos. Cada paso es álgebra lineal. La ingeniería acaba de empezar.</p>
+</div>
+
+<p class="cta-row"><a class="cta primary" href="@timeline">Repasar la historia completa →</a><a class="cta" href="@home">Volver al índice</a></p>
+
+<section class="references">
+  <h2>Referencias</h2>
+  <ol>
+    <li>P. W. Shor (1995). «Scheme for reducing decoherence in quantum computer memory». <em>Physical Review A</em>, 52(4).</li>
+    <li>A. M. Steane (1996). «Error Correcting Codes in Quantum Theory». <em>Physical Review Letters</em>, 77(5).</li>
+    <li>E. Knill y R. Laflamme (1997). «Theory of quantum error-correcting codes». <em>Physical Review A</em>, 55(2).</li>
+    <li>D. Gottesman (1997). <em>Stabilizer Codes and Quantum Error Correction</em>. Tesis doctoral, Caltech.</li>
+    <li>D. Aharonov y M. Ben-Or (1997). «Fault-tolerant quantum computation with constant error». <em>STOC</em>.</li>
+    <li>A. Y. Kitaev (2003). «Fault-tolerant quantum computation by anyons». <em>Annals of Physics</em>, 303 (arXiv 1997).</li>
+    <li>J. Preskill (2018). «Quantum Computing in the NISQ era and beyond». <em>Quantum</em>, 2.</li>
+    <li>Google Quantum AI y colaboradores (2025). «Quantum error correction below the surface code threshold». <em>Nature</em>, 638.</li>
+  </ol>
+</section>

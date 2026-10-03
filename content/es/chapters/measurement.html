@@ -1,0 +1,107 @@
+<!--meta
+{
+  "slug": "medida",
+  "title": "Medida",
+  "chain": "Medida",
+  "headline": "Preguntar cambia la respuesta",
+  "dek": "Medir es el único momento en que un ordenador cuántico entrega información clásica, y el único paso no reversible. Los observables son matrices hermíticas, los resultados son sus valores propios y dos preguntas incompatibles no pueden tener a la vez respuestas nítidas.",
+  "era": "1922 – 1982",
+  "people": ["Otto Stern", "Walther Gerlach", "Werner Heisenberg", "Howard Robertson", "John von Neumann", "William Wootters", "Wojciech Zurek"],
+  "theorems": ["Teorema espectral", "Relación de incertidumbre de Robertson", "Matrices densidad", "Teorema de no clonación"]
+}
+-->
+
+<p>En 1922 Otto Stern y Walther Gerlach dispararon átomos de plata a través de un campo magnético no uniforme en Fráncfort. Según la física clásica, los pequeños momentos magnéticos de los átomos debían desviarse en cualquier cantidad y dejar una mancha alargada. En cambio, en la placa de vidrio aparecieron dos manchas separadas: la magnitud medida, el espín, solo tomaba dos valores. Fue la primera medida de un qubit.</p>
+
+<h2>Observables y teorema espectral</h2>
+
+<p>En mecánica cuántica, cada magnitud medible (un <strong>observable</strong>) se representa con una matriz <strong>hermítica</strong>: $A = A^\dagger$. Los resultados posibles al medirla son sus valores propios. Que esto tenga sentido lo garantiza uno de los teoremas centrales del álgebra lineal.</p>
+
+<div class="theorem">
+  <span class="th-title">Teorema <span class="th-name">(teorema espectral, caso hermítico)</span></span>
+  <p>Si $A \in \mathbb{C}^{d \times d}$ es hermítica, sus valores propios $\lambda_1, \dots, \lambda_d$ son reales y existe una base ortonormal $\{\ket{e_i}\}$ de vectores propios, de modo que</p>
+  $$A = \sum_{i=1}^{d} \lambda_i \ketbra{e_i}{e_i}.$$
+</div>
+
+<details class="proof">
+  <summary>Demostración de los dos hechos clave</summary>
+  <div>
+    <p><strong>Valores propios reales.</strong> Si $A\ket{v} = \lambda\ket{v}$ con $\ket{v} \neq 0$, entonces $\lambda\braket{v}{v} = \bra{v}A\ket{v} = \bra{v}A^\dagger\ket{v} = \overline{\lambda}\braket{v}{v}$, así que $\lambda = \overline\lambda$.</p>
+    <p><strong>Vectores propios ortogonales.</strong> Si $A\ket{u} = \mu\ket{u}$ y $A\ket{v} = \lambda\ket{v}$ con $\mu \neq \lambda$, entonces $\mu\braket{u}{v} = \bra{u}A\ket{v} = \lambda\braket{u}{v}$, luego $\braket{u}{v} = 0$. La completitud (que haya $d$) se obtiene por inducción: el complemento ortogonal de un vector propio es invariante por $A$.</p>
+  </div>
+</details>
+
+<div class="definition">
+  <span class="th-title">Postulado <span class="th-name">(medida proyectiva)</span></span>
+  <p>Al medir el observable $A = \sum_i \lambda_i \ketbra{e_i}{e_i}$ sobre el estado $\ket{\psi}$ se obtiene el resultado $\lambda_i$ con probabilidad $|\braket{e_i}{\psi}|^2$, y el sistema queda en el estado $\ket{e_i}$. El valor medio es</p>
+  $$\langle A \rangle = \sum_i \lambda_i\, |\braket{e_i}{\psi}|^2 = \bra{\psi} A \ket{\psi}.$$
+</div>
+
+<p>Para un qubit, los tres observables básicos son las <strong>matrices de Pauli</strong>, que miden el espín según los tres ejes de la <a href="@ch:qubits#bloch">esfera de Bloch</a>:</p>
+
+$$X = \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}, \qquad Y = \begin{pmatrix} 0 & -i \\ i & 0 \end{pmatrix}, \qquad Z = \begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix}.$$
+
+<p>Las tres tienen valores propios $\pm 1$. Y para un estado con vector de Bloch $\mathbf{r}$, los valores medios son exactamente sus coordenadas: $\langle X \rangle = r_x$, $\langle Y\rangle = r_y$, $\langle Z \rangle = r_z$.</p>
+
+<h2>Medidas sucesivas</h2>
+
+<figure class="demo wide" data-demo="measurement/stern-gerlach">
+  <figcaption>Una cadena de analizadores de Stern-Gerlach. El primero se queda con los átomos que salen «arriba» según su eje; el segundo y el tercero miden según los ángulos que elijas. Medir según $z$, luego $x$ y otra vez $z$ no devuelve la certeza original: medir $x$ borró la información sobre $z$. La probabilidad de atravesar un analizador girado un ángulo $\theta$ respecto al anterior es $\cos^2(\theta/2)$.</figcaption>
+</figure>
+
+<h2>La relación de incertidumbre</h2>
+
+<p>Dos observables que no conmutan no pueden tener a la vez valores nítidos. En 1927 Werner Heisenberg lo enunció para la posición y el momento; en 1929 Howard Robertson demostró la versión general, que se sigue directamente de la <a href="https://toniferr.github.io/math-of-ai/es/algebra-lineal/">desigualdad de Cauchy-Schwarz</a>.</p>
+
+<div class="theorem">
+  <span class="th-title">Teorema <span class="th-name">(Robertson, 1929)</span></span>
+  <p>Para $A$, $B$ hermíticas y todo estado $\ket{\psi}$, con $\sigma_A^2 = \langle A^2\rangle - \langle A\rangle^2$,</p>
+  $$\sigma_A\, \sigma_B \;\ge\; \frac{1}{2}\left|\bra{\psi}[A, B]\ket{\psi}\right|, \qquad [A, B] = AB - BA.$$
+</div>
+
+<details class="proof">
+  <summary>Demostración</summary>
+  <div>
+    <p>Sean $\ket{f} = (A - \langle A\rangle)\ket{\psi}$ y $\ket{g} = (B - \langle B\rangle)\ket{\psi}$, de modo que $\braket{f}{f} = \sigma_A^2$ y $\braket{g}{g} = \sigma_B^2$. Por Cauchy-Schwarz, $\sigma_A^2\sigma_B^2 \ge |\braket{f}{g}|^2 \ge (\mathrm{Im}\braket{f}{g})^2$. Además $\braket{f}{g} - \braket{g}{f} = \bra{\psi}[A, B]\ket{\psi}$, y $\braket{f}{g} - \overline{\braket{f}{g}} = 2i\,\mathrm{Im}\braket{f}{g}$. Combinando ambas sale la desigualdad.</p>
+  </div>
+</details>
+
+<p>Para las matrices de Pauli, $[X, Z] = -2iY$, así que $\sigma_X\sigma_Z \ge |\langle Y\rangle|$. La incertidumbre no es una limitación de nuestros instrumentos: es una propiedad de los propios vectores.</p>
+
+<h2>Estados mezcla</h2>
+
+<p>A veces no sabemos en qué estado puro está un sistema: con probabilidad $p_k$ está en $\ket{\psi_k}$. En 1927 von Neumann propuso describir esa situación con una <strong>matriz densidad</strong>:</p>
+
+$$\rho = \sum_k p_k \ketbra{\psi_k}{\psi_k}, \qquad \rho \succeq 0, \qquad \mathrm{Tr}\,\rho = 1, \qquad P(i) = \bra{e_i}\rho\ket{e_i}.$$
+
+<p>Para un qubit, toda matriz densidad tiene la forma $\rho = \tfrac12(I + r_x X + r_y Y + r_z Z)$ con $\|\mathbf{r}\| \le 1$: los estados mezcla llenan el interior de la esfera (la <strong>bola de Bloch</strong>), y el centro es el estado máximamente mezclado, una moneda justa. Dos mezclas muy distintas pueden tener la misma $\rho$ y, entonces, ser indistinguibles con cualquier medida. Las matrices densidad serán esenciales para describir el <a href="@ch:error-correction">ruido y la decoherencia</a>.</p>
+
+<h2 id="no-clonacion">Un qubit no se puede copiar</h2>
+
+<p>Copiar un bit clásico es trivial. Copiar un qubit desconocido es imposible, un hecho que William Wootters y Wojciech Zurek, e independientemente Dennis Dieks, demostraron en 1982 en pocas líneas.</p>
+
+<div class="theorem">
+  <span class="th-title">Teorema <span class="th-name">(no clonación)</span></span>
+  <p>No existe ningún unitario $U$ ni estado fijo $\ket{s}$ tales que $U(\ket{\psi}\otimes\ket{s}) = \ket{\psi}\otimes\ket{\psi}$ para todo estado $\ket{\psi}$.</p>
+</div>
+
+<details class="proof">
+  <summary>Demostración</summary>
+  <div>
+    <p>Supongamos que funciona para $\ket{\psi}$ y $\ket{\phi}$. Los unitarios conservan el producto interior, así que $\braket{\phi}{\psi}\braket{s}{s} = \braket{\phi}{\psi}^2$, es decir, $\braket{\phi}{\psi} = \braket{\phi}{\psi}^2$. Entonces $\braket{\phi}{\psi}$ vale 0 o 1: la máquina solo puede copiar estados iguales u ortogonales, nunca estados arbitrarios.</p>
+  </div>
+</details>
+
+<p>La no clonación es una limitación (no hay copias de seguridad, lo que complica la <a href="@ch:error-correction">corrección de errores</a>) y una oportunidad: un espía no puede copiar qubits sin perturbarlos, la base de la criptografía cuántica (BB84, Bennett y Brassard, 1984). Y es coherente con la cota de Holevo: si se pudieran clonar amplitudes, un qubit se podría copiar muchas veces y medir una y otra vez para extraerlas.</p>
+
+<section class="references">
+  <h2>Referencias</h2>
+  <ol>
+    <li>W. Gerlach y O. Stern (1922). «Der experimentelle Nachweis der Richtungsquantelung im Magnetfeld». <em>Zeitschrift für Physik</em>, 9.</li>
+    <li>W. Heisenberg (1927). «Über den anschaulichen Inhalt der quantentheoretischen Kinematik und Mechanik». <em>Zeitschrift für Physik</em>, 43.</li>
+    <li>H. P. Robertson (1929). «The Uncertainty Principle». <em>Physical Review</em>, 34.</li>
+    <li>W. K. Wootters y W. H. Zurek (1982). «A single quantum cannot be cloned». <em>Nature</em>, 299.</li>
+    <li>D. Dieks (1982). «Communication by EPR devices». <em>Physics Letters A</em>, 92(6).</li>
+    <li>C. H. Bennett y G. Brassard (1984). «Quantum cryptography: Public key distribution and coin tossing». <em>Proceedings of IEEE ICCSSP</em>.</li>
+  </ol>
+</section>

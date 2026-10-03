@@ -1,0 +1,113 @@
+<!--meta
+{
+  "slug": "fourier",
+  "title": "Transformada cuántica de Fourier",
+  "chain": "Fourier",
+  "headline": "Encontrar periodos ocultos",
+  "dek": "Fourier nos enseñó a descomponer cualquier señal en frecuencias. Su versión cuántica actúa sobre $2^n$ amplitudes con solo unas $n^2$ puertas, exponencialmente menos que el algoritmo clásico rápido. Junto con la interferencia, convierte la periodicidad oculta en picos que se pueden medir.",
+  "era": "1807 – 1998",
+  "people": ["Joseph Fourier", "James Cooley", "John Tukey", "Ethan Bernstein", "Umesh Vazirani", "Daniel Simon", "Don Coppersmith", "Alexei Kitaev"],
+  "theorems": ["Unitariedad de la QFT", "Representación como producto", "Transformada de estados periódicos", "Estimación de fase"]
+}
+-->
+
+<p>En 1807 Joseph Fourier afirmó, estudiando la propagación del calor, que cualquier función se puede escribir como una suma de senos y cosenos. Dos siglos después la versión discreta de su idea está en todas partes: comprimir imágenes, filtrar audio, multiplicar números grandes. En 1965 James Cooley y John Tukey redescubrieron la <strong>transformada rápida de Fourier</strong> (FFT), que calcula la transformada de $N$ números en $O(N\log N)$ operaciones. La versión cuántica es todavía exponencialmente más rápida, con una pega que tendremos que aprender a sortear.</p>
+
+<h2>La transformada discreta y la cuántica</h2>
+
+<p>Sean $N = 2^n$ y $\omega = e^{2\pi i/N}$, una raíz $N$-ésima primitiva de la unidad. La <strong>transformada cuántica de Fourier</strong> es la aplicación lineal definida sobre la base computacional por</p>
+
+$$\mathrm{QFT}\ket{j} = \frac{1}{\sqrt N}\sum_{k=0}^{N-1} \omega^{jk}\ket{k}, \qquad j = 0, \dots, N-1.$$
+
+<p>Aplicada a un estado $\sum_j x_j\ket{j}$, produce la transformada discreta de Fourier de las amplitudes, $\sum_k y_k \ket{k}$ con $y_k = \frac{1}{\sqrt N}\sum_j \omega^{jk}x_j$.</p>
+
+<div class="theorem">
+  <span class="th-title">Proposición <span class="th-name">(la QFT es unitaria)</span></span>
+  <p>Las columnas de la matriz de la QFT son ortonormales, así que es una puerta cuántica válida.</p>
+</div>
+
+<details class="proof">
+  <summary>Demostración</summary>
+  <div>
+    <p>El producto interior de las columnas $j$ y $j'$ es $\frac{1}{N}\sum_{k=0}^{N-1}\omega^{(j'-j)k}$. Si $j = j'$ vale 1. Si no, $q = \omega^{j'-j} \neq 1$ es una raíz $N$-ésima de la unidad y la suma geométrica $\sum_k q^k = \frac{q^N - 1}{q - 1} = 0$.</p>
+  </div>
+</details>
+
+<p>Para $N = 2$, la QFT es exactamente la <a href="@ch:interference">puerta de Hadamard</a>. Y aplicar $H$ a cada uno de $n$ qubits es la transformada de Fourier sobre el grupo $(\mathbb{Z}_2)^n$: el algoritmo de Deutsch-Jozsa ya era una transformada de Fourier disfrazada.</p>
+
+<h2>Un circuito exponencialmente pequeño</h2>
+
+<p>La clave de su eficiencia es que la QFT de un estado de la base no crea entrelazamiento: se factoriza en $n$ qubits separados. Escribamos $j$ en binario como $j = j_1 j_2 \dots j_n$, y $0.j_l j_{l+1}\dots j_n$ para la fracción binaria $\sum_{m\ge l} j_m 2^{l-m-1}$.</p>
+
+<div class="theorem">
+  <span class="th-title">Teorema <span class="th-name">(representación como producto)</span></span>
+  $$\mathrm{QFT}\ket{j_1\dots j_n} = \frac{\left(\ket{0} + e^{2\pi i\, 0.j_n}\ket{1}\right)\otimes\left(\ket{0} + e^{2\pi i\, 0.j_{n-1}j_n}\ket{1}\right)\otimes\cdots\otimes\left(\ket{0} + e^{2\pi i\, 0.j_1 j_2\dots j_n}\ket{1}\right)}{2^{n/2}}.$$
+</div>
+
+<details class="proof">
+  <summary>Esbozo de la demostración</summary>
+  <div>
+    <p>Escribamos $k = \sum_{l=1}^n k_l 2^{n-l}$. Entonces $\omega^{jk} = \prod_l e^{2\pi i\, j k_l/2^l}$, y la suma sobre $k$ se factoriza en un producto de sumas sobre cada bit $k_l \in \{0,1\}$. En $e^{2\pi i j/2^l}$ solo importan los últimos $l$ bits de $j$, porque los demás aportan múltiplos enteros de $2\pi i$.</p>
+  </div>
+</details>
+
+<p>Cada factor se prepara con una puerta de Hadamard y unas cuantas rotaciones de fase controladas, $R_k = \mathrm{diag}(1, e^{2\pi i/2^k})$. En total $n(n+1)/2$ puertas, más una inversión del orden de los qubits: $O(n^2)$ operaciones para transformar $2^n$ amplitudes, frente a las $O(n\,2^n)$ de la FFT. Coppersmith (1994) mostró además que las rotaciones más pequeñas se pueden omitir sin pérdida apreciable, lo que deja $O(n\log n)$ puertas.</p>
+
+<aside class="note">La pega: las amplitudes no son accesibles. La QFT calcula la transformada, pero al medir se obtiene un único valor $k$ con probabilidad $|y_k|^2$. Solo es útil si la transformada concentra la probabilidad en unos pocos valores informativos.</aside>
+
+<h2 id="periodicos">La periodicidad se convierte en picos</h2>
+
+<p>Eso es exactamente lo que ocurre con los estados periódicos, la situación que importa para el <a href="@ch:shor">algoritmo de Shor</a>.</p>
+
+<div class="theorem">
+  <span class="th-title">Teorema <span class="th-name">(transformada de un estado periódico)</span></span>
+  <p>Sea $r$ un divisor de $N$ y $m = N/r$. El estado uniforme sobre una progresión aritmética de paso $r$,</p>
+  $$\ket{\psi} = \frac{1}{\sqrt m}\sum_{s=0}^{m-1}\ket{x_0 + sr},$$
+  <p>se transforma en una superposición uniforme sobre los múltiplos de $m$: al medir tras la QFT se obtiene $k = \ell\, N/r$ con $\ell$ uniforme en $\{0, \dots, r-1\}$, sea cual sea el desplazamiento $x_0$.</p>
+</div>
+
+<details class="proof">
+  <summary>Demostración</summary>
+  <div>
+    <p>La amplitud de $\ket{k}$ es $\frac{1}{\sqrt{Nm}}\,\omega^{x_0 k}\sum_{s=0}^{m-1}\left(\omega^{rk}\right)^s$. Ahora $\omega^{rk} = e^{2\pi i k/m}$ es una raíz $m$-ésima de la unidad. Si $m$ divide a $k$ vale 1 y la suma vale $m$, lo que da probabilidad $\frac{m^2}{Nm} = \frac{1}{r}$. Si no, la suma geométrica vale 0. El desplazamiento solo aporta la fase $\omega^{x_0k}$, que no cambia las probabilidades.</p>
+  </div>
+</details>
+
+<figure class="demo wide" data-demo="fourier/qft">
+  <figcaption>Un estado de 6 qubits ($N = 64$) uniforme sobre una progresión de periodo $r$ (arriba) y su transformada cuántica de Fourier (abajo, colores = fase). Cuando $r$ divide a 64 la salida es un peine perfecto de $r$ picos separados por $64/r$. Cuando no lo divide, los picos se difuminan un poco pero siguen cerca de los múltiplos de $64/r$, lo suficiente para recuperar $r$, como hará el algoritmo de Shor. Mover el desplazamiento solo cambia las fases.</figcaption>
+</figure>
+
+<h2>Estructura oculta en una sola consulta</h2>
+
+<p>La misma idea dio las primeras separaciones entre la computación cuántica y la clásica, en el modelo en que una función $f$ solo se puede consultar como una caja negra.</p>
+
+<p><strong>Bernstein-Vazirani (1993).</strong> Sea $f(x) = s\cdot x \bmod 2$ para una cadena secreta $s \in \{0,1\}^n$. Clásicamente, cada consulta revela como mucho un bit de información sobre $s$, así que hacen falta $n$ consultas. Cuánticamente basta una: se prepara $H^{\otimes n}\ket{0}$, se aplica el oráculo como una fase $(-1)^{s\cdot x}$ y se vuelve a aplicar $H^{\otimes n}$. Como $H^{\otimes n}\sum_x (-1)^{s\cdot x}\ket{x} = 2^{n/2}\ket{s}$, al medir se obtiene $s$ con certeza.</p>
+
+<figure class="demo wide" data-demo="fourier/bv">
+  <figcaption>El problema de Bernstein-Vazirani. Elige una cadena secreta. La estrategia clásica consulta $f$ en $e_1, e_2, \dots$, un bit por consulta; el circuito cuántico pregunta una vez, con todas las entradas en superposición, y la interferencia de las fases $(-1)^{s\cdot x}$ deja exactamente $\ket{s}$.</figcaption>
+</figure>
+
+<p><strong>Simon (1994).</strong> Si $f(x) = f(y)$ exactamente cuando $y = x$ o $y = x\oplus s$, encontrar $s$ requiere $\Omega(2^{n/2})$ consultas para cualquier algoritmo clásico, incluso aleatorio, y $O(n)$ para uno cuántico: la primera separación <em>exponencial</em> frente a algoritmos aleatorios. El artículo de Daniel Simon fue el que inspiró a Peter Shor.</p>
+
+<h2>Estimación de fase</h2>
+
+<p>Alexei Kitaev (1995) reformuló estas ideas en una herramienta general. Supongamos un unitario $U$ y uno de sus vectores propios $\ket{u}$ con $U\ket{u} = e^{2\pi i\varphi}\ket{u}$. Con $t$ qubits auxiliares, las puertas $U^{2^j}$ controladas escriben la fase $\varphi$ en las amplitudes como $\frac{1}{2^{t/2}}\sum_y e^{2\pi i\varphi y}\ket{y}$, y una QFT inversa la convierte en un número binario.</p>
+
+<div class="theorem">
+  <span class="th-title">Teorema <span class="th-name">(estimación de fase)</span></span>
+  <p>Con $t$ qubits, la medida devuelve la mejor aproximación de $\varphi$ con $t$ bits con probabilidad al menos $4/\pi^2 \approx 0{,}405$; con $t + O(\log(1/\varepsilon))$ qubits, una aproximación con $t$ bits con probabilidad al menos $1 - \varepsilon$. Si $\varphi$ tiene un desarrollo exacto con $t$ bits, el resultado es seguro.</p>
+</div>
+
+<p>La estimación de fase está en el corazón del algoritmo de Shor, de la química cuántica (estimar energías, los valores propios de un hamiltoniano) y de los algoritmos para sistemas lineales. El siguiente capítulo la pone a trabajar en el problema que hizo famosa a la computación cuántica.</p>
+
+<section class="references">
+  <h2>Referencias</h2>
+  <ol>
+    <li>J. W. Cooley y J. W. Tukey (1965). «An Algorithm for the Machine Calculation of Complex Fourier Series». <em>Mathematics of Computation</em>, 19(90).</li>
+    <li>E. Bernstein y U. Vazirani (1993). «Quantum complexity theory». <em>STOC</em>.</li>
+    <li>D. R. Simon (1994). «On the power of quantum computation». <em>FOCS</em> (versión de revista: <em>SIAM J. Computing</em>, 1997).</li>
+    <li>D. Coppersmith (1994). «An approximate Fourier transform useful in quantum factoring». IBM Research Report RC19642.</li>
+    <li>A. Y. Kitaev (1995). «Quantum measurements and the Abelian Stabilizer Problem». arXiv:quant-ph/9511026.</li>
+    <li>R. Cleve, A. Ekert, C. Macchiavello y M. Mosca (1998). «Quantum algorithms revisited». <em>Proceedings of the Royal Society A</em>, 454.</li>
+  </ol>
+</section>

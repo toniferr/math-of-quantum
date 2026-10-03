@@ -1,0 +1,106 @@
+<!--meta
+{
+  "slug": "qubits",
+  "title": "Qubits",
+  "chain": "Qubit",
+  "headline": "Un vector unitario en un espacio complejo",
+  "dek": "Un qubit no es «0 y 1 a la vez». Es un vector unitario de $\\mathbb{C}^2$, cuyas componentes son amplitudes complejas; los cuadrados de sus módulos dan las probabilidades de cada resultado. Geométricamente, todo qubit es un punto de una esfera.",
+  "era": "1900 – 1973",
+  "people": ["Max Planck", "Werner Heisenberg", "Erwin Schrödinger", "Max Born", "Paul Dirac", "John von Neumann", "Felix Bloch"],
+  "theorems": ["Regla de Born", "Invisibilidad de la fase global", "Esfera de Bloch", "Cota de Holevo"]
+}
+-->
+
+<p>En 1900 Max Planck explicó el espectro de los cuerpos calientes suponiendo que la energía se intercambia en paquetes discretos, <em>cuantos</em>. Un cuarto de siglo después, Heisenberg (1925) y Schrödinger (1926) construyeron dos teorías que parecían distintas y resultaron ser la misma, y en 1932 John von Neumann les dio su forma matemática definitiva: los estados de un sistema cuántico son vectores de un <strong>espacio de Hilbert</strong>. El sistema cuántico no trivial más pequeño tiene un espacio de dimensión dos: el <strong>qubit</strong>.</p>
+
+<h2>Espacios de Hilbert y notación de Dirac</h2>
+
+<div class="definition">
+  <span class="th-title">Definición <span class="th-name">(espacio de Hilbert, dimensión finita)</span></span>
+  <p>Un espacio vectorial $\mathcal{H} = \mathbb{C}^d$ con el <strong>producto interior</strong> $\braket{\phi}{\psi} = \sum_i \overline{\phi_i}\, \psi_i$, que es lineal en el segundo argumento, cumple $\braket{\phi}{\psi} = \overline{\braket{\psi}{\phi}}$ y $\braket{\psi}{\psi} = \|\psi\|^2 \ge 0$, con igualdad solo para $\psi = 0$.</p>
+</div>
+
+<p>Paul Dirac introdujo en 1939 una notación que se sigue usando en todas partes. Un vector columna es un <strong>ket</strong>, $\ket{\psi}$; su traspuesto conjugado, un vector fila, es un <strong>bra</strong>, $\bra{\psi} = \ket{\psi}^\dagger$. Juntos forman un <em>bra-ket</em>, el producto interior $\braket{\phi}{\psi}$, y en el orden contrario un operador: $\ketbra{\psi}{\psi}$ es el proyector sobre $\ket{\psi}$.</p>
+
+<h2>El qubit y la regla de Born</h2>
+
+<div class="definition">
+  <span class="th-title">Postulado <span class="th-name">(estados)</span></span>
+  <p>El estado de un qubit es un vector unitario de $\mathbb{C}^2$:</p>
+  $$\ket{\psi} = \alpha\ket{0} + \beta\ket{1}, \qquad \alpha, \beta \in \mathbb{C}, \qquad |\alpha|^2 + |\beta|^2 = 1.$$
+</div>
+
+<p>Los números $\alpha$ y $\beta$ son <strong>amplitudes</strong>. No se pueden observar directamente. Lo que se observa es el resultado de una medida, y aquí Max Born, en una nota a pie de página de un artículo de 1926, dio la regla que conecta el formalismo con el laboratorio.</p>
+
+<div class="theorem">
+  <span class="th-title">Postulado <span class="th-name">(regla de Born)</span></span>
+  <p>Al medir $\ket{\psi}$ en la base $\{\ket{0}, \ket{1}\}$ se obtiene 0 con probabilidad $|\alpha|^2 = |\braket{0}{\psi}|^2$ y 1 con probabilidad $|\beta|^2 = |\braket{1}{\psi}|^2$. Tras la medida, el estado pasa a ser $\ket{0}$ o $\ket{1}$, según el resultado.</p>
+</div>
+
+<p>Por eso un qubit no es «0 y 1 a la vez»: es un estado que, al medirlo, da un resultado concreto con probabilidades fijadas por las amplitudes. La diferencia con un bit probabilístico es que las amplitudes son números complejos que pueden anularse entre sí, como veremos en el <a href="@ch:interference">siguiente capítulo</a>. Cada amplitud se puede imaginar como una flecha en el plano complejo: su longitud es el módulo y su ángulo es la <strong>fase</strong>, $\alpha = |\alpha|\, e^{i\varphi}$.</p>
+
+<h2>La fase global es invisible</h2>
+
+<div class="theorem">
+  <span class="th-title">Proposición <span class="th-name">(fase global)</span></span>
+  <p>Para todo real $\gamma$, los estados $\ket{\psi}$ y $e^{i\gamma}\ket{\psi}$ dan las mismas probabilidades en cualquier medida.</p>
+</div>
+
+<details class="proof">
+  <summary>Demostración</summary>
+  <div>
+    <p>Cualquier resultado tiene probabilidad $|\braket{e}{\psi}|^2$ para algún vector unitario $\ket{e}$. Multiplicar por $e^{i\gamma}$ da $|e^{i\gamma}|^2 |\braket{e}{\psi}|^2 = |\braket{e}{\psi}|^2$, porque $|e^{i\gamma}| = 1$.</p>
+  </div>
+</details>
+
+<p>La <strong>fase relativa</strong> entre $\alpha$ y $\beta$, en cambio, sí importa: $\tfrac{1}{\sqrt2}(\ket{0} + \ket{1})$ y $\tfrac{1}{\sqrt2}(\ket{0} - \ket{1})$ dan las mismas probabilidades en la base $\{\ket{0}, \ket{1}\}$, pero son estados ortogonales, perfectamente distinguibles en otra base. Se llaman $\ket{+}$ y $\ket{-}$.</p>
+
+<h2 id="bloch">La esfera de Bloch</h2>
+
+<p>Un qubit tiene cuatro parámetros reales (dos números complejos), menos uno por la normalización y otro por la fase global invisible: quedan dos. Dos ángulos, como la latitud y la longitud de una esfera.</p>
+
+<div class="theorem">
+  <span class="th-title">Teorema <span class="th-name">(esfera de Bloch)</span></span>
+  <p>Salvo una fase global, todo estado de un qubit se escribe de forma única como</p>
+  $$\ket{\psi} = \cos\frac{\theta}{2}\ket{0} + e^{i\varphi}\sin\frac{\theta}{2}\ket{1}, \qquad \theta \in [0, \pi],\ \varphi \in [0, 2\pi),$$
+  <p>y la aplicación $\ket{\psi} \mapsto (\sin\theta\cos\varphi,\ \sin\theta\sin\varphi,\ \cos\theta)$ es una biyección entre los estados puros y los puntos de la esfera unidad $S^2$ (con $\varphi$ indefinido en los polos). Los estados ortogonales corresponden a puntos antípodas.</p>
+</div>
+
+<details class="proof">
+  <summary>Demostración</summary>
+  <div>
+    <p>Escribamos $\alpha = |\alpha| e^{i a}$ y $\beta = |\beta| e^{i b}$. Multiplicar por la fase global $e^{-ia}$ hace $\alpha$ real y no negativo, y deja $\beta = |\beta|e^{i(b-a)}$. Como $|\alpha|^2 + |\beta|^2 = 1$, hay un único $\theta \in [0, \pi]$ con $|\alpha| = \cos(\theta/2)$ y $|\beta| = \sin(\theta/2)$; tomamos $\varphi = b - a$.</p>
+    <p>Para la ortogonalidad: $\braket{\psi}{\psi'} = 0$ significa que el ángulo entre los dos vectores de $\mathbb{C}^2$ es de 90°, y los semiángulos de la fórmula lo duplican en 180° sobre la esfera. Explícitamente, el antípoda de $(\theta, \varphi)$ es $(\pi - \theta, \varphi + \pi)$, y $\cos\frac{\theta}{2}\cos\frac{\pi - \theta}{2} - \sin\frac{\theta}{2}\sin\frac{\pi-\theta}{2} = \cos\frac{\pi}{2} = 0$.</p>
+  </div>
+</details>
+
+<figure class="demo wide" data-demo="qubits/bloch">
+  <figcaption>Arrastra el punto sobre la esfera (o usa los controles). El polo norte es $\ket{0}$ y el polo sur $\ket{1}$; en el ecuador están las superposiciones equilibradas, que solo se diferencian en su fase relativa $\varphi$. Las flechas de la derecha son las dos amplitudes en el plano complejo. Al medir se obtiene 0 con probabilidad $\cos^2(\theta/2)$, sea cual sea $\varphi$.</figcaption>
+</figure>
+
+<aside class="note">Felix Bloch introdujo esta representación en 1946 para describir la resonancia magnética nuclear, décadas antes de que nadie hablara de qubits. Los qubits físicos adoptan muchas formas: el espín de un electrón o un núcleo, la polarización de un fotón, dos niveles de energía de un ion o de un circuito superconductor.</aside>
+
+<h2>¿Cuánta información cabe en un qubit?</h2>
+
+<p>Para describir un qubit hacen falta dos números reales, que en principio podrían tener infinitas cifras decimales. ¿Podría un solo qubit guardar una enciclopedia? No, y el motivo es un teorema.</p>
+
+<div class="theorem">
+  <span class="th-title">Teorema <span class="th-name">(cota de Holevo, 1973, caso particular)</span></span>
+  <p>Si un mensaje clásico se codifica en el estado de $n$ qubits y el receptor los mide de cualquier manera, la información mutua entre el mensaje y el resultado es como mucho de $n$ bits.</p>
+</div>
+
+<p>Cada medida colapsa el estado y entrega un solo bit por qubit. La información de las amplitudes es real, pero no es accesible de una vez. El arte de los algoritmos cuánticos consiste en hacer interferir las amplitudes para que, cuando por fin midamos, el bit útil aparezca con alta probabilidad.</p>
+
+<p>Ya tenemos la descripción estática de un qubit. En el siguiente capítulo lo ponemos en movimiento y aparece el rasgo que distingue a las amplitudes de las probabilidades: pueden anularse entre sí.</p>
+
+<section class="references">
+  <h2>Referencias</h2>
+  <ol>
+    <li>M. Born (1926). «Zur Quantenmechanik der Stoßvorgänge». <em>Zeitschrift für Physik</em>, 37.</li>
+    <li>J. von Neumann (1932). <em>Mathematische Grundlagen der Quantenmechanik</em>. Springer.</li>
+    <li>P. A. M. Dirac (1939). «A new notation for quantum mechanics». <em>Mathematical Proceedings of the Cambridge Philosophical Society</em>, 35(3).</li>
+    <li>F. Bloch (1946). «Nuclear Induction». <em>Physical Review</em>, 70.</li>
+    <li>A. S. Holevo (1973). «Bounds for the quantity of information transmitted by a quantum communication channel». <em>Problems of Information Transmission</em>, 9(3).</li>
+    <li>M. A. Nielsen e I. L. Chuang (2010). <em>Quantum Computation and Quantum Information</em>, ed. del 10.º aniversario. Cambridge University Press.</li>
+  </ol>
+</section>

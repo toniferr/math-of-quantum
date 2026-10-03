@@ -1,0 +1,123 @@
+<!--meta
+{
+  "slug": "bits",
+  "title": "Bits",
+  "chain": "Bit",
+  "headline": "De bits a vectores",
+  "dek": "Antes del qubit estuvo el bit. Reescribir la computación clásica como álgebra lineal (bits como vectores, puertas lógicas como matrices, el azar como vectores de probabilidad) revela exactamente qué cambia la mecánica cuántica: una norma por otra.",
+  "era": "1937 – 1980",
+  "people": ["Claude Shannon", "Rolf Landauer", "Charles Bennett", "Tommaso Toffoli"],
+  "theorems": ["Universalidad de NAND", "Principio de Landauer", "Universalidad reversible (Toffoli)", "Isometrías de $\\ell_p$"]
+}
+-->
+
+<p>En 1937 un estudiante del MIT de 21 años, Claude Shannon, demostró en su tesis de máster que los circuitos de relés de las centralitas telefónicas obedecen el álgebra que George Boole había inventado en 1854 para formalizar la lógica. Desde entonces, todo ordenador manipula <strong>bits</strong>, cantidades que valen 0 o 1, con puertas lógicas. Para entender qué tiene de nuevo la computación cuántica hay que mirar antes el bit clásico con otros ojos: como un vector.</p>
+
+<h2>Circuitos booleanos</h2>
+
+<p>Una puerta recibe bits y devuelve bits: $\mathrm{NOT}(x) = 1 - x$, $\mathrm{AND}(x, y) = xy$, $\mathrm{NAND}(x,y) = 1 - xy$. Un <strong>circuito</strong> conecta puertas y calcula una función $f : \{0,1\}^n \to \{0,1\}^m$. Basta un único tipo de puerta para construirlas todas.</p>
+
+<div class="theorem">
+  <span class="th-title">Teorema <span class="th-name">(universalidad de NAND)</span></span>
+  <p>Toda función booleana $f : \{0,1\}^n \to \{0,1\}$ se puede calcular con un circuito formado solo por puertas NAND.</p>
+</div>
+
+<details class="proof">
+  <summary>Demostración</summary>
+  <div>
+    <p>Escribimos $f$ en forma normal disyuntiva: un OR, sobre las entradas $a$ con $f(a) = 1$, del AND de los literales $x_i$ o $\neg x_i$ que solo es cierto en $a$. Bastan, pues, NOT, AND y OR. Y cada una se construye con NAND: $\neg x = \mathrm{NAND}(x, x)$, $\;x \wedge y = \neg\,\mathrm{NAND}(x,y)$, $\;x \vee y = \mathrm{NAND}(\neg x, \neg y)$ (De Morgan).</p>
+  </div>
+</details>
+
+<p>La demostración esconde una advertencia que importará más adelante: la forma normal puede tener exponencialmente muchos términos. Poder calcular una función no dice nada sobre calcularla <em>eficientemente</em>. Si los ordenadores cuánticos pueden calcular eficientemente lo que los clásicos no pueden es la pregunta que recorre toda esta web.</p>
+
+<h2>La información es física</h2>
+
+<p>Una puerta AND destruye información: viendo la salida 0 no se puede saber si la entrada era 00, 01 o 10. En 1961 Rolf Landauer, en IBM, demostró que eso tiene un precio físico ineludible.</p>
+
+<div class="theorem">
+  <span class="th-title">Principio <span class="th-name">(Landauer, 1961)</span></span>
+  <p>Borrar un bit de información en un entorno a temperatura $T$ disipa al menos</p>
+  $$E \ge k_B\, T \ln 2$$
+  <p>de calor, donde $k_B$ es la constante de Boltzmann (unos $3 \times 10^{-21}$ julios a temperatura ambiente).</p>
+</div>
+
+<p>En 1973 Charles Bennett demostró que ese coste no es inevitable: todo cálculo puede hacerse de forma <strong>reversible</strong>, sin borrar nada, guardando suficientes bits extra y «descalculando» los resultados intermedios al final. En 1980 Tommaso Toffoli encontró la puerta que lo hace práctico.</p>
+
+<div class="theorem">
+  <span class="th-title">Teorema <span class="th-name">(universalidad reversible; Toffoli, 1980)</span></span>
+  <p>La puerta de Toffoli $\;T(a, b, c) = (a,\; b,\; c \oplus ab)\;$ es reversible (es su propia inversa) y, con bits auxiliares fijados a 0 o 1, toda función booleana se puede calcular con un circuito de puertas de Toffoli.</p>
+</div>
+
+<details class="proof">
+  <summary>Demostración</summary>
+  <div>
+    <p>Aplicar $T$ dos veces da $c \oplus ab \oplus ab = c$, así que $T$ es su propia inversa. Con $c = 1$ la tercera salida es $1 \oplus ab = \mathrm{NAND}(a, b)$, y con $b = 1, c = 0$ copia $a$ (duplicación de cables). Por la universalidad de NAND, cualquier circuito se puede simular.</p>
+  </div>
+</details>
+
+<p>Este detalle es crucial: como veremos, la evolución de un sistema cuántico siempre es reversible. El teorema de Toffoli garantiza que un ordenador cuántico puede hacer, como mínimo, todo lo que hace uno clásico.</p>
+
+<h2>Bits como vectores</h2>
+
+<p>Ahora, el cambio de perspectiva. Representemos el bit 0 con el vector $\ket{0} = \binom{1}{0}$ y el bit 1 con $\ket{1} = \binom{0}{1}$ (la notación $\ket{\cdot}$, de Dirac, aparecerá constantemente). Entonces NOT es una matriz:</p>
+
+$$X = \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}, \qquad X\ket{0} = \ket{1}, \qquad X\ket{1} = \ket{0}.$$
+
+<p>Con $n$ bits hay $2^n$ configuraciones posibles, y cada una es un vector de la base de un espacio de dimensión $2^n$. Un circuito reversible determinista es una <strong>matriz de permutación</strong> que baraja esos vectores. Parece una forma extravagante de describir algo sencillo, hasta que añadimos el azar.</p>
+
+<h2 id="probabilisticos">Bits probabilísticos</h2>
+
+<p>Una moneda en el aire es un bit que no conocemos. La describimos con un <strong>vector de probabilidades</strong> $\mathbf{p} = (p_0, p_1)$, con $p_i \ge 0$ y $p_0 + p_1 = 1$. Es decir, un vector de componentes no negativas y <strong>norma 1</strong> igual a 1: $\|\mathbf{p}\|_1 = |p_0| + |p_1| = 1$. Las operaciones aleatorias también son matrices.</p>
+
+<div class="theorem">
+  <span class="th-title">Proposición <span class="th-name">(matrices estocásticas)</span></span>
+  <p>Una matriz $S$ transforma todo vector de probabilidades en otro vector de probabilidades si y solo si es <strong>estocástica</strong>: entradas no negativas y cada columna sumando 1.</p>
+</div>
+
+<details class="proof">
+  <summary>Demostración</summary>
+  <div>
+    <p>Aplicar $S$ al vector de la base $\mathbf{e}_j$ da la columna $j$, que tiene que ser un vector de probabilidades. Recíprocamente, $S\mathbf{p}$ es una combinación convexa de las columnas, que son vectores de probabilidades, y el conjunto de vectores de probabilidades es convexo.</p>
+  </div>
+</details>
+
+<p>Una matriz estocástica solo puede <em>mezclar</em>: lleva los puntos del segmento $p_0 + p_1 = 1$ hacia su interior y, salvo que sea una permutación, no se puede deshacer sin perder la garantía de no negatividad. La incertidumbre crece; nunca disminuye. ¿Existe algo más suave, que permita ir de 0 a 1 de forma continua <em>y reversible</em>? Aquí llega la primera sorpresa.</p>
+
+<div class="theorem">
+  <span class="th-title">Proposición <span class="th-name">(NOT no tiene raíz cuadrada estocástica)</span></span>
+  <p>No existe ninguna matriz estocástica $S$ de $2 \times 2$ tal que $S^2 = X$.</p>
+</div>
+
+<details class="proof">
+  <summary>Demostración</summary>
+  <div>
+    <p>Escribamos $S = \begin{pmatrix} a & b \\ 1-a & 1-b \end{pmatrix}$ con $a, b \in [0, 1]$. La entrada superior izquierda de $S^2$ es $a^2 + b(1-a)$, que debe ser 0. Los dos términos son no negativos, así que $a = 0$ y $b = 0$. Pero entonces $S = \begin{pmatrix} 0 & 0 \\ 1 & 1\end{pmatrix}$ y $S^2 = S \neq X$.</p>
+  </div>
+</details>
+
+<p>Con la <strong>norma 2</strong> la historia es distinta. Si en lugar de probabilidades usamos vectores $(\alpha, \beta)$ con $\alpha^2 + \beta^2 = 1$, una rotación de 45° aplicada dos veces es una rotación de 90°, que lleva $\ket{0}$ a $\ket{1}$. No es casualidad: de todas las maneras de medir longitudes, solo una permite transformaciones reversibles continuas.</p>
+
+<div class="theorem">
+  <span class="th-title">Teorema <span class="th-name">(isometrías de $\ell_p$)</span></span>
+  <p>Sean $n \ge 2$ y $p \ge 1$ con $p \neq 2$. Toda aplicación lineal $A : \mathbb{R}^n \to \mathbb{R}^n$ que conserva la norma $\|\mathbf{x}\|_p = \left(\sum_i |x_i|^p\right)^{1/p}$ es una matriz de <strong>permutación con signos</strong>. Para $p = 2$, en cambio, las isometrías son todas las matrices ortogonales (todas las rotaciones y reflexiones), una familia continua.</p>
+</div>
+
+<figure class="demo wide" data-demo="bits/norms">
+  <figcaption>El mismo control, dos mundos. <strong>Izquierda:</strong> un bit probabilístico (norma 1) al que aplicamos dos veces una matriz estocástica de «volteo parcial». <strong>Derecha:</strong> un vector de norma 2 igual a 1 al que aplicamos dos veces una rotación. Con $t = 0{,}5$ el bit clásico acaba al 50 %, y esa información se pierde para siempre; el vector acaba exactamente en $\ket{1}$: es una raíz cuadrada de NOT. Las líneas discontinuas son la «circunferencia» unidad de cada norma.</figcaption>
+</figure>
+
+<aside class="note">Esta idea, que la mecánica cuántica es «teoría de la probabilidad con la norma 2 en lugar de la norma 1», es la forma en que la presenta Scott Aaronson en <em>Quantum Computing Since Democritus</em> (2013).</aside>
+
+<p>La mecánica cuántica es, en su núcleo matemático, lo que se obtiene al dar ese paso: describir el estado de un bit con un vector de <strong>norma 2</strong> igual a 1, cuyas componentes pueden ser negativas e incluso <strong>complejas</strong>. Esas componentes no son probabilidades, sino <em>amplitudes</em>, y las probabilidades son los cuadrados de sus módulos. Eso es el <a href="@ch:qubits">qubit</a>.</p>
+
+<section class="references">
+  <h2>Referencias</h2>
+  <ol>
+    <li>C. E. Shannon (1938). «A Symbolic Analysis of Relay and Switching Circuits». <em>Transactions of the AIEE</em>, 57(12).</li>
+    <li>R. Landauer (1961). «Irreversibility and Heat Generation in the Computing Process». <em>IBM Journal of Research and Development</em>, 5(3).</li>
+    <li>C. H. Bennett (1973). «Logical Reversibility of Computation». <em>IBM Journal of Research and Development</em>, 17(6).</li>
+    <li>T. Toffoli (1980). «Reversible Computing». <em>ICALP</em>, LNCS 85.</li>
+    <li>S. Aaronson (2013). <em>Quantum Computing Since Democritus</em>. Cambridge University Press.</li>
+  </ol>
+</section>

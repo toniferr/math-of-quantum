@@ -1,0 +1,125 @@
+<!--meta
+{
+  "slug": "entanglement",
+  "title": "Entanglement",
+  "chain": "Entanglement",
+  "headline": "Correlations no hidden variable can explain",
+  "dek": "Two qubits do not live in a plane but in a four-dimensional space built with the tensor product, and most of its states cannot be described qubit by qubit. Einstein called it “spooky action at a distance”; Bell turned it into an inequality that experiments violate.",
+  "era": "1935 – 2022",
+  "people": ["Albert Einstein", "Erwin Schrödinger", "John Bell", "John Clauser", "Boris Tsirelson", "Alain Aspect", "Anton Zeilinger"],
+  "theorems": ["Product criterion", "Schmidt decomposition", "CHSH inequality", "Tsirelson bound", "No-signalling"]
+}
+-->
+
+<p>In 1935 Einstein, Podolsky and Rosen published a paper arguing that quantum mechanics had to be incomplete: it predicted perfect correlations between distant particles that, they thought, could only be explained by hidden properties fixed in advance. That same year Schrödinger gave the phenomenon its name, <em>Verschränkung</em>, entanglement, and called it “the characteristic trait of quantum mechanics”. It took thirty years for John Bell to show that the question could be settled experimentally.</p>
+
+<h2>Composite systems: the tensor product</h2>
+
+<div class="definition">
+  <span class="th-title">Postulate <span class="th-name">(composite systems)</span></span>
+  <p>The state space of two systems is the <strong>tensor product</strong> of their spaces. For two qubits, $\mathbb{C}^2 \otimes \mathbb{C}^2 \cong \mathbb{C}^4$, with basis $\ket{00}, \ket{01}, \ket{10}, \ket{11}$, where $\ket{ab} = \ket{a}\otimes\ket{b}$ and</p>
+  $$\begin{pmatrix} a_0 \\ a_1 \end{pmatrix} \otimes \begin{pmatrix} b_0 \\ b_1 \end{pmatrix} = \begin{pmatrix} a_0 b_0 \\ a_0 b_1 \\ a_1 b_0 \\ a_1 b_1 \end{pmatrix}.$$
+</div>
+
+<p>Dimensions multiply: $n$ qubits live in $\mathbb{C}^{2^n}$. Describing 300 qubits would take more amplitudes than there are atoms in the observable universe. This exponential growth is both the difficulty of simulating quantum systems and, as Feynman pointed out in 1981, the reason for building a computer that is itself quantum.</p>
+
+<h2>Product or entangled</h2>
+
+<p>A state is a <strong>product</strong> if it can be written as $\ket{a}\otimes\ket{b}$: each qubit has its own state. Otherwise it is <strong>entangled</strong>.</p>
+
+<div class="theorem">
+  <span class="th-title">Proposition <span class="th-name">(product criterion)</span></span>
+  <p>The two-qubit state $c_{00}\ket{00} + c_{01}\ket{01} + c_{10}\ket{10} + c_{11}\ket{11}$ is a product if and only if</p>
+  $$c_{00}\,c_{11} - c_{01}\,c_{10} = 0.$$
+</div>
+
+<details class="proof">
+  <summary>Proof</summary>
+  <div>
+    <p>Arrange the amplitudes as a matrix $C = \begin{pmatrix} c_{00} & c_{01} \\ c_{10} & c_{11}\end{pmatrix}$. The state is $\ket{a}\otimes\ket{b}$ exactly when $c_{ij} = a_i b_j$, that is, when $C = \mathbf{a}\mathbf{b}^\top$ has rank 1. A nonzero $2\times2$ matrix has rank 1 if and only if its determinant is zero.</p>
+  </div>
+</details>
+
+<p>The four <strong>Bell states</strong> are the canonical example of maximal entanglement. For $\ket{\Phi^+}$ the determinant is $\tfrac12 \neq 0$:</p>
+
+$$\ket{\Phi^\pm} = \frac{\ket{00} \pm \ket{11}}{\sqrt2}, \qquad \ket{\Psi^\pm} = \frac{\ket{01} \pm \ket{10}}{\sqrt2}.$$
+
+<p>Measuring the first qubit of $\ket{\Phi^+}$ gives 0 or 1 at random, but the second one always gives the same. Each qubit, on its own, is a perfect coin; together they are perfectly correlated.</p>
+
+<div class="theorem">
+  <span class="th-title">Theorem <span class="th-name">(Schmidt decomposition)</span></span>
+  <p>Every state of a bipartite system $\mathbb{C}^{d_A}\otimes\mathbb{C}^{d_B}$ can be written as</p>
+  $$\ket{\psi} = \sum_{k=1}^{r} \sqrt{\lambda_k}\, \ket{u_k}\otimes\ket{v_k},$$
+  <p>with $\{\ket{u_k}\}$ and $\{\ket{v_k}\}$ orthonormal, $\lambda_k > 0$ and $\sum_k \lambda_k = 1$. The state is a product if and only if the <em>Schmidt rank</em> $r$ is 1.</p>
+</div>
+
+<details class="proof">
+  <summary>Proof</summary>
+  <div>
+    <p>It is the singular value decomposition of the amplitude matrix $C$: $C = U\Sigma V^\top$ gives $\ket{\psi} = \sum_k \sigma_k (U\mathbf{e}_k)\otimes(V\mathbf{e}_k)$, with $\lambda_k = \sigma_k^2$. The normalization of $\ket{\psi}$ is $\sum_k\sigma_k^2 = 1$.</p>
+  </div>
+</details>
+
+<p>The numbers $\lambda_k$ measure the entanglement. Their Shannon entropy, $E = -\sum_k \lambda_k\log_2\lambda_k$, is the <strong>entanglement entropy</strong>: 0 for products and 1 bit for Bell states. Equivalently, the state of each qubit alone (its reduced density matrix) is pure only for products; for Bell states it is the centre of the Bloch ball.</p>
+
+<figure class="demo wide" data-demo="entanglement/meter">
+  <figcaption>Build a two-qubit state with real amplitudes. The meter computes $c_{00}c_{11} - c_{01}c_{10}$ and the entanglement entropy. The small spheres show the reduced state of each qubit: for a product state the arrows reach the surface; the more entangled the state, the shorter they get, until they vanish for Bell states.</figcaption>
+</figure>
+
+<h2 id="bell">Bell's theorem</h2>
+
+<p>Could the correlations of $\ket{\Phi^+}$ be explained by instructions that the two particles carry from the start, as in a pair of gloves split into two boxes? In 1964 John Bell showed that every theory of that kind satisfies an inequality that quantum mechanics violates. The most useful version is due to Clauser, Horne, Shimony and Holt (1969).</p>
+
+<p>Alice chooses between two measurements $A_0, A_1$, and Bob between $B_0, B_1$; each one gives $\pm1$. Define the correlation $E(x, y)$ as the average of the product of their results, and</p>
+
+$$S = E(0,0) + E(0,1) + E(1,0) - E(1,1).$$
+
+<div class="theorem">
+  <span class="th-title">Theorem <span class="th-name">(CHSH inequality)</span></span>
+  <p>If the results are determined by a shared hidden variable $\lambda$ (with arbitrary distribution) and each one depends only on its own party's choice, then $|S| \le 2$.</p>
+</div>
+
+<details class="proof">
+  <summary>Proof</summary>
+  <div>
+    <p>For a fixed $\lambda$, the results are numbers $a_0, a_1, b_0, b_1 \in \{-1, +1\}$, and</p>
+    $$a_0(b_0 + b_1) + a_1(b_0 - b_1).$$
+    <p>One of the parentheses is 0 and the other $\pm 2$, so the expression is $\pm 2$. Averaging over $\lambda$ gives a value in $[-2, 2]$.</p>
+  </div>
+</details>
+
+<p>With the state $\ket{\Phi^+}$ of two photons and polarizers at angles $\alpha$ and $\beta$, quantum mechanics predicts $E = \cos 2(\alpha - \beta)$. Choosing $\alpha_0 = 0°$, $\alpha_1 = 45°$, $\beta_0 = 22.5°$, $\beta_1 = -22.5°$:</p>
+
+$$S = 3\cos 45° - \cos 135° = 4\cdot\frac{\sqrt2}{2} = 2\sqrt2 \approx 2.83 > 2.$$
+
+<div class="theorem">
+  <span class="th-title">Theorem <span class="th-name">(Tsirelson bound, 1980)</span></span>
+  <p>For every quantum state and measurements, $|S| \le 2\sqrt2$. The value $2\sqrt2$ is reached with $\ket{\Phi^+}$ and the angles above.</p>
+</div>
+
+<figure class="demo wide" data-demo="entanglement/chsh">
+  <figcaption>The CHSH game, simulated. Choose the four polarizer angles and run many rounds with entangled photons, or with a local hidden-variable model (each pair carries a random angle $\lambda$ and each photon answers according to its own polarizer). The local model never exceeds the classical limit 2; the entangled pairs reach $2\sqrt2$ with the optimal angles.</figcaption>
+</figure>
+
+<p>Alain Aspect's experiments in Orsay (1982) confirmed the violation, and in 2015 three groups (Delft, Vienna and Boulder) closed the last major loopholes at the same time. Aspect, John Clauser and Anton Zeilinger received the 2022 Nobel Prize in Physics. Nature does not admit a local hidden-variable description.</p>
+
+<div class="theorem">
+  <span class="th-title">Theorem <span class="th-name">(no-signalling)</span></span>
+  <p>Whatever Alice measures, the probabilities of Bob's results do not change: his reduced density matrix $\rho_B = \mathrm{Tr}_A\ketbra{\psi}{\psi}$ is the same. Entanglement does not allow sending information faster than light.</p>
+</div>
+
+<p>Entanglement is a resource. With one Bell pair and two classical bits, an unknown qubit can be transferred from one place to another: this is <strong>quantum teleportation</strong> (Bennett et al., 1993; first experiment in Innsbruck, 1997). And, as we will see, every quantum algorithm with an exponential speedup must create a great deal of entanglement: a computer whose qubits always remain in product states can be simulated efficiently by a classical one.</p>
+
+<section class="references">
+  <h2>References</h2>
+  <ol>
+    <li>A. Einstein, B. Podolsky and N. Rosen (1935). “Can Quantum-Mechanical Description of Physical Reality Be Considered Complete?”. <em>Physical Review</em>, 47.</li>
+    <li>E. Schrödinger (1935). “Discussion of Probability Relations between Separated Systems”. <em>Mathematical Proceedings of the Cambridge Philosophical Society</em>, 31(4).</li>
+    <li>J. S. Bell (1964). “On the Einstein Podolsky Rosen Paradox”. <em>Physics</em>, 1(3).</li>
+    <li>J. F. Clauser, M. A. Horne, A. Shimony and R. A. Holt (1969). “Proposed Experiment to Test Local Hidden-Variable Theories”. <em>Physical Review Letters</em>, 23(15).</li>
+    <li>B. S. Cirel'son (1980). “Quantum generalizations of Bell's inequality”. <em>Letters in Mathematical Physics</em>, 4(2).</li>
+    <li>A. Aspect, J. Dalibard and G. Roger (1982). “Experimental Test of Bell's Inequalities Using Time-Varying Analyzers”. <em>Physical Review Letters</em>, 49(25).</li>
+    <li>C. H. Bennett et al. (1993). “Teleporting an unknown quantum state via dual classical and Einstein-Podolsky-Rosen channels”. <em>Physical Review Letters</em>, 70(13).</li>
+    <li>B. Hensen et al. (2015). “Loophole-free Bell inequality violation using electron spins separated by 1.3 kilometres”. <em>Nature</em>, 526.</li>
+  </ol>
+</section>

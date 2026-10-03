@@ -1,0 +1,239 @@
+{
+  "site_title": "What makes a quantum computer different?",
+  "site_short": "Math of Quantum",
+  "site_description": "An interactive explainer on the mathematics of quantum computing: from bits to qubits, interference, entanglement, Shor, Grover and error correction, one theorem at a time.",
+  "nav": {
+    "main": "Main navigation",
+    "chapters": "Chapters",
+    "timeline": "History",
+    "theme": "Switch between light and dark theme",
+    "skip": "Skip to content",
+    "lang": "Language"
+  },
+  "chapter": {
+    "label": "Chapter",
+    "era": "Period",
+    "people": "Key figures",
+    "theorems": "Key results",
+    "toc": "In this chapter",
+    "prev": "Previous",
+    "next": "Next",
+    "prevnext": "Previous and next chapter"
+  },
+  "timeline": {
+    "slug": "history",
+    "kicker": "Timeline",
+    "all": "All",
+    "filter": "Filter by chapter",
+    "read": "Chapter"
+  },
+  "footer": {
+    "text": "Text, figures and code handmade (with help from Claude Code): no frameworks, no trackers, and formulas in native MathML. Companion site: <a href=\"https://toniferr.github.io/math-of-ai/\">Math of AI</a>.",
+    "source": "Source code on GitHub"
+  },
+  "demos": {
+    "core": { "error": "This figure could not be loaded." },
+    "home": {
+      "title": "A qubit on the Bloch sphere",
+      "hint": "Drag the point on the sphere.",
+      "measure": "Measure",
+      "measure100": "Measure 100 times",
+      "reset": "Clear",
+      "got": "Last outcome: {v} · {n} measurements"
+    },
+    "norms": {
+      "classical": "Probabilistic bit (1-norm)",
+      "quantum": "Amplitude vector (2-norm)",
+      "fraction": "Fraction of a NOT",
+      "cAfter": "Classical after two steps",
+      "qAfter": "Quantum after two steps",
+      "cRev": "Classical step reversible?",
+      "yes": "yes (a permutation)",
+      "never": "no: information lost",
+      "notStochastic": "only with a non-stochastic matrix"
+    },
+    "bloch": {
+      "title": "Bloch sphere",
+      "amps": "Amplitudes α and β in the complex plane",
+      "probs": "Probabilities when measuring",
+      "measure100": "Measure 100 times",
+      "clear": "Clear counts"
+    },
+    "mz": {
+      "title": "Mach–Zehnder interferometer",
+      "phase": "Phase",
+      "fire": "Send 100 photons",
+      "hits": "Clicks D0 / D1",
+      "d0": "Amplitudes at D0",
+      "d1": "Amplitudes at D1",
+      "curve": "P(D0) as a function of φ",
+      "source": "source"
+    },
+    "walk": {
+      "title": "Position distribution after t steps",
+      "steps": "Steps",
+      "play": "Play",
+      "pause": "Pause",
+      "quantum": "quantum walk",
+      "classical": "classical random walk",
+      "sigmaC": "Classical spread σ",
+      "sigmaQ": "Quantum spread σ",
+      "ratio": "Ratio"
+    },
+    "sg": {
+      "title": "Chain of Stern–Gerlach analysers",
+      "angle2": "Middle analyser",
+      "angle3": "Last analyser",
+      "middle": "Include the middle analyser",
+      "send": "Send 1000 atoms",
+      "oven": "oven",
+      "legend": "Each analyser lets the “up” beam through along its axis and blocks the other one (✕).",
+      "final": "Atoms at the screen",
+      "theory": "Predicted probability"
+    },
+    "meter": {
+      "preset": "Example",
+      "presets": {
+        "product": "|00⟩ (product)",
+        "plus0": "|+⟩|0⟩ (product)",
+        "phiPlus": "Bell state Φ⁺",
+        "psiMinus": "Bell state Ψ⁻",
+        "partial": "Partially entangled"
+      },
+      "normalized": "The amplitudes are normalized automatically.",
+      "amps": "Amplitudes (normalized)",
+      "qa": "Qubit A alone",
+      "qb": "Qubit B alone",
+      "entropy": "Entanglement entropy",
+      "bits": "bits",
+      "kind": "Verdict",
+      "productState": "product state",
+      "entangled": "entangled",
+      "maximal": "maximally entangled"
+    },
+    "chsh": {
+      "gauge": "Value of S",
+      "corr": "Correlation E as a function of the angle difference",
+      "table": "Correlations",
+      "model": "Source",
+      "quantum": "Entangled photons",
+      "local": "Local hidden variables",
+      "optimal": "Optimal angles",
+      "aligned": "Aligned",
+      "run": "Run 4000 rounds",
+      "predicted": "Predicted",
+      "measured": "Measured",
+      "theory": "S predicted",
+      "classicalZone": "allowed for any local theory",
+      "quantumZone": "quantum only",
+      "diff": "blue: quantum · grey: local"
+    },
+    "circ": {
+      "title": "Three-qubit circuit",
+      "preset": "Example",
+      "presets": {
+        "empty": "Empty",
+        "interference": "H then H (interference)",
+        "bell": "Bell pair",
+        "ghz": "GHZ state",
+        "toffoli": "Toffoli gate",
+        "djBalanced": "Deutsch–Jozsa, balanced f",
+        "djConstant": "Deutsch–Jozsa, constant f",
+        "phaseKick": "Phase kickback"
+      },
+      "clear": "Clear",
+      "hint": "Click a cell to cycle: H, X, Z, S, T, Y, ● (control), ⊕ (target).",
+      "amps": "Final state: probability (height) and phase (colour)",
+      "phase": "phase",
+      "col": "column",
+      "emptyCell": "empty"
+    },
+    "qft": {
+      "period": "Period",
+      "offset": "Offset",
+      "input": "Input: uniform over x₀, x₀ + r, x₀ + 2r, …",
+      "output": "After the QFT (probability ∝ height, colour = phase)",
+      "terms": "Terms in the input",
+      "spacing": "Expected spacing",
+      "peaks": "Peaks",
+      "exact": "{n} exact peaks",
+      "blurred": "about {n} blurred peaks"
+    },
+    "bv": {
+      "secret": "Secret string s (click to change)",
+      "classical": "Classical: one bit per query",
+      "quantum": "Quantum: one query in superposition",
+      "query": "Query f(eᵢ)",
+      "run": "Run the circuit",
+      "queries": "{k} of {n} queries"
+    },
+    "shor": {
+      "f": "f(x) = aˣ mod N",
+      "dist": "Probability of measuring y",
+      "measure": "Measure",
+      "info": "{t} qubits in the first register (Q = {Q}). True period r = {r}.",
+      "step1": "1 · The function aˣ mod N is periodic (red: value 1)",
+      "step2": "2 · After the QFT: peaks near multiples of Q/r",
+      "step3": "3 · Continued fractions of y/Q",
+      "step4": "4 · Factors",
+      "press": "Press “Measure” to sample y.",
+      "candidate": "Last convergent with denominator < N: q = {q}. ",
+      "verified": "aʳ ≡ 1 holds for r = {r}.",
+      "notVerified": "It is not a period: measure again.",
+      "useless": "This measurement gives no information (y = 0 or no useful convergent): measure again.",
+      "odd": "r = {r} is odd: this base does not work. Try another a.",
+      "minusOne": "{a}^{h} ≡ −1 (mod {N}): this base does not work. Try another a.",
+      "waiting": "Waiting for a verified period."
+    },
+    "grover": {
+      "amps": "Amplitudes (with sign) and their mean",
+      "prob": "Probability of success after k iterations",
+      "plane": "The 2D plane of the algorithm",
+      "qubits": "Qubits",
+      "marked": "Marked item",
+      "oracle": "Oracle",
+      "diffusion": "Diffusion",
+      "iteration": "Full iteration",
+      "reset": "Reset",
+      "mean": "mean",
+      "iters": "Iterations k",
+      "oracleOnly": "oracle",
+      "success": "P(success)",
+      "optimal": "Optimal k"
+    },
+    "deco": {
+      "title": "Decoherence on the Bloch sphere",
+      "channel": "Channel",
+      "channels": {
+        "dephasing": "Dephasing",
+        "damping": "Amplitude damping",
+        "depolarizing": "Depolarizing"
+      },
+      "state": "Highlighted state",
+      "starts": {
+        "plus": "|+⟩",
+        "one": "|1⟩",
+        "plusI": "|+i⟩",
+        "mixed": "generic state"
+      },
+      "time": "Time",
+      "length": "Bloch vector length |r|",
+      "purity": "Purity Tr ρ²"
+    },
+    "rep": {
+      "title": "Logical error of the repetition code",
+      "p": "Physical error",
+      "d": "Copies",
+      "run": "Simulate 10,000 trials",
+      "theory": "Logical error (theory)",
+      "empirical": "Logical error (simulated)",
+      "gain": "Effect of the code",
+      "better": "better",
+      "worse": "worse than no code",
+      "xLabel": "physical error rate p",
+      "yLabel": "logical error",
+      "ok": "majority correct",
+      "fail": "majority wrong: logical error"
+    }
+  }
+}

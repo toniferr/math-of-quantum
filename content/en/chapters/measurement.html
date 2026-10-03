@@ -1,0 +1,107 @@
+<!--meta
+{
+  "slug": "measurement",
+  "title": "Measurement",
+  "chain": "Measurement",
+  "headline": "Asking a question changes the answer",
+  "dek": "Measuring is the only moment when a quantum computer hands over classical information, and the only non-reversible step. Observables are Hermitian matrices, outcomes are their eigenvalues, and two incompatible questions cannot both have sharp answers.",
+  "era": "1922 – 1982",
+  "people": ["Otto Stern", "Walther Gerlach", "Werner Heisenberg", "Howard Robertson", "John von Neumann", "William Wootters", "Wojciech Zurek"],
+  "theorems": ["Spectral theorem", "Robertson's uncertainty relation", "Density matrices", "No-cloning theorem"]
+}
+-->
+
+<p>In 1922 Otto Stern and Walther Gerlach fired silver atoms through an inhomogeneous magnetic field in Frankfurt. Classically, the atoms' small magnetic moments should have been deflected by any amount and produced a smeared band. Instead, two separate spots appeared on the glass plate: the measured quantity, the spin, took only two values. It was the first measurement of a qubit.</p>
+
+<h2>Observables and the spectral theorem</h2>
+
+<p>In quantum mechanics, each measurable quantity (an <strong>observable</strong>) is represented by a <strong>Hermitian</strong> matrix: $A = A^\dagger$. The possible outcomes of measuring it are its eigenvalues. That this makes sense is guaranteed by one of the central theorems of linear algebra.</p>
+
+<div class="theorem">
+  <span class="th-title">Theorem <span class="th-name">(spectral theorem, Hermitian case)</span></span>
+  <p>If $A \in \mathbb{C}^{d \times d}$ is Hermitian, its eigenvalues $\lambda_1, \dots, \lambda_d$ are real and there is an orthonormal basis $\{\ket{e_i}\}$ of eigenvectors, so that</p>
+  $$A = \sum_{i=1}^{d} \lambda_i \ketbra{e_i}{e_i}.$$
+</div>
+
+<details class="proof">
+  <summary>Proof of the two key facts</summary>
+  <div>
+    <p><strong>Real eigenvalues.</strong> If $A\ket{v} = \lambda\ket{v}$ with $\ket{v} \neq 0$, then $\lambda\braket{v}{v} = \bra{v}A\ket{v} = \bra{v}A^\dagger\ket{v} = \overline{\lambda}\braket{v}{v}$, so $\lambda = \overline\lambda$.</p>
+    <p><strong>Orthogonal eigenvectors.</strong> If $A\ket{u} = \mu\ket{u}$ and $A\ket{v} = \lambda\ket{v}$ with $\mu \neq \lambda$, then $\mu\braket{u}{v} = \bra{u}A\ket{v} = \lambda\braket{u}{v}$, so $\braket{u}{v} = 0$. Completeness (that there are $d$ of them) follows by induction: the orthogonal complement of an eigenvector is invariant under $A$.</p>
+  </div>
+</details>
+
+<div class="definition">
+  <span class="th-title">Postulate <span class="th-name">(projective measurement)</span></span>
+  <p>Measuring the observable $A = \sum_i \lambda_i \ketbra{e_i}{e_i}$ on the state $\ket{\psi}$ gives the outcome $\lambda_i$ with probability $|\braket{e_i}{\psi}|^2$, and leaves the system in the state $\ket{e_i}$. The average value is</p>
+  $$\langle A \rangle = \sum_i \lambda_i\, |\braket{e_i}{\psi}|^2 = \bra{\psi} A \ket{\psi}.$$
+</div>
+
+<p>For a qubit, the three basic observables are the <strong>Pauli matrices</strong>, which measure the spin along the three axes of the <a href="@ch:qubits#bloch">Bloch sphere</a>:</p>
+
+$$X = \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}, \qquad Y = \begin{pmatrix} 0 & -i \\ i & 0 \end{pmatrix}, \qquad Z = \begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix}.$$
+
+<p>All three have eigenvalues $\pm 1$. And for a state with Bloch vector $\mathbf{r}$, the averages are exactly its coordinates: $\langle X \rangle = r_x$, $\langle Y\rangle = r_y$, $\langle Z \rangle = r_z$.</p>
+
+<h2>Sequential measurements</h2>
+
+<figure class="demo wide" data-demo="measurement/stern-gerlach">
+  <figcaption>A chain of Stern–Gerlach analysers. The first one keeps the atoms that come out “up” along its axis; the second and third measure along the angles you choose. Measuring along $z$, then $x$, then $z$ again does not give back the original certainty: measuring $x$ erased the information about $z$. The probability of passing an analyser at an angle $\theta$ from the previous one is $\cos^2(\theta/2)$.</figcaption>
+</figure>
+
+<h2>The uncertainty relation</h2>
+
+<p>Two observables that do not commute cannot both have sharp values. In 1927 Werner Heisenberg stated it for position and momentum; in 1929 Howard Robertson proved the general version, which follows directly from the <a href="https://toniferr.github.io/math-of-ai/linear-algebra/">Cauchy–Schwarz inequality</a>.</p>
+
+<div class="theorem">
+  <span class="th-title">Theorem <span class="th-name">(Robertson, 1929)</span></span>
+  <p>For Hermitian $A$, $B$ and every state $\ket{\psi}$, with $\sigma_A^2 = \langle A^2\rangle - \langle A\rangle^2$,</p>
+  $$\sigma_A\, \sigma_B \;\ge\; \frac{1}{2}\left|\bra{\psi}[A, B]\ket{\psi}\right|, \qquad [A, B] = AB - BA.$$
+</div>
+
+<details class="proof">
+  <summary>Proof</summary>
+  <div>
+    <p>Let $\ket{f} = (A - \langle A\rangle)\ket{\psi}$ and $\ket{g} = (B - \langle B\rangle)\ket{\psi}$, so that $\braket{f}{f} = \sigma_A^2$ and $\braket{g}{g} = \sigma_B^2$. By Cauchy–Schwarz, $\sigma_A^2\sigma_B^2 \ge |\braket{f}{g}|^2 \ge (\mathrm{Im}\braket{f}{g})^2$. Now $\braket{f}{g} - \braket{g}{f} = \bra{\psi}[A, B]\ket{\psi}$, and $\braket{f}{g} - \overline{\braket{f}{g}} = 2i\,\mathrm{Im}\braket{f}{g}$. Combining both gives the inequality.</p>
+  </div>
+</details>
+
+<p>For the Pauli matrices, $[X, Z] = -2iY$, so $\sigma_X\sigma_Z \ge |\langle Y\rangle|$. Uncertainty is not a limitation of our instruments: it is a property of the vectors themselves.</p>
+
+<h2>Mixed states</h2>
+
+<p>Sometimes we do not know which pure state a system is in: with probability $p_k$ it is in $\ket{\psi_k}$. In 1927 von Neumann proposed describing that situation with a <strong>density matrix</strong>:</p>
+
+$$\rho = \sum_k p_k \ketbra{\psi_k}{\psi_k}, \qquad \rho \succeq 0, \qquad \mathrm{Tr}\,\rho = 1, \qquad P(i) = \bra{e_i}\rho\ket{e_i}.$$
+
+<p>For a qubit, every density matrix has the form $\rho = \tfrac12(I + r_x X + r_y Y + r_z Z)$ with $\|\mathbf{r}\| \le 1$: mixed states fill the interior of the sphere (the <strong>Bloch ball</strong>), and the centre is the maximally mixed state, a fair coin. Two very different mixtures can have the same $\rho$ and, by then, be indistinguishable by any measurement. Density matrices will be essential for describing <a href="@ch:error-correction">noise and decoherence</a>.</p>
+
+<h2 id="no-cloning">You cannot copy a qubit</h2>
+
+<p>Copying a classical bit is trivial. Copying an unknown qubit is impossible, a fact that William Wootters and Wojciech Zurek, and independently Dennis Dieks, proved in 1982 in a few lines.</p>
+
+<div class="theorem">
+  <span class="th-title">Theorem <span class="th-name">(no-cloning)</span></span>
+  <p>There is no unitary $U$ and fixed state $\ket{s}$ such that $U(\ket{\psi}\otimes\ket{s}) = \ket{\psi}\otimes\ket{\psi}$ for every state $\ket{\psi}$.</p>
+</div>
+
+<details class="proof">
+  <summary>Proof</summary>
+  <div>
+    <p>Suppose it works for $\ket{\psi}$ and $\ket{\phi}$. Unitaries preserve inner products, so $\braket{\phi}{\psi}\braket{s}{s} = \braket{\phi}{\psi}^2$, that is, $\braket{\phi}{\psi} = \braket{\phi}{\psi}^2$. Then $\braket{\phi}{\psi}$ is 0 or 1: the machine can only copy states that are equal or orthogonal, never arbitrary ones.</p>
+  </div>
+</details>
+
+<p>No-cloning is a limitation (no backup copies, which makes <a href="@ch:error-correction">error correction</a> tricky) and an opportunity: an eavesdropper cannot copy qubits without disturbing them, which is the basis of quantum cryptography (BB84, Bennett and Brassard, 1984). And it is consistent with the Holevo bound: if amplitudes could be cloned, a qubit could be copied many times and measured over and over to extract them.</p>
+
+<section class="references">
+  <h2>References</h2>
+  <ol>
+    <li>W. Gerlach and O. Stern (1922). “Der experimentelle Nachweis der Richtungsquantelung im Magnetfeld”. <em>Zeitschrift für Physik</em>, 9.</li>
+    <li>W. Heisenberg (1927). “Über den anschaulichen Inhalt der quantentheoretischen Kinematik und Mechanik”. <em>Zeitschrift für Physik</em>, 43.</li>
+    <li>H. P. Robertson (1929). “The Uncertainty Principle”. <em>Physical Review</em>, 34.</li>
+    <li>W. K. Wootters and W. H. Zurek (1982). “A single quantum cannot be cloned”. <em>Nature</em>, 299.</li>
+    <li>D. Dieks (1982). “Communication by EPR devices”. <em>Physics Letters A</em>, 92(6).</li>
+    <li>C. H. Bennett and G. Brassard (1984). “Quantum cryptography: Public key distribution and coin tossing”. <em>Proceedings of IEEE ICCSSP</em>.</li>
+  </ol>
+</section>

@@ -1,0 +1,20 @@
+{
+  "base_url": "https://toniferr.github.io/math-of-quantum/",
+  "repo": "https://github.com/toniferr/math-of-quantum",
+  "author": "Antonio Ferreiro",
+  "author_url": "https://toniferr.github.io/",
+  "langs": ["en", "es"],
+  "default_lang": "en",
+  "chapters": [
+    "bits",
+    "qubits",
+    "interference",
+    "measurement",
+    "entanglement",
+    "circuits",
+    "fourier",
+    "shor",
+    "grover",
+    "error-correction"
+  ]
+}

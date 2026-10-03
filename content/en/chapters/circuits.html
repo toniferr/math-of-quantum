@@ -1,0 +1,112 @@
+<!--meta
+{
+  "slug": "circuits",
+  "title": "Gates and circuits",
+  "chain": "Circuits",
+  "headline": "Programming with unitary matrices",
+  "dek": "A quantum gate is a unitary matrix and a circuit is a product of them. A few gates are enough to approximate any computation, and some very powerful-looking circuits can be simulated classically. The boundary between the two is the theory of quantum complexity.",
+  "era": "1985 – 1998",
+  "people": ["David Deutsch", "Richard Jozsa", "Adriano Barenco", "Robert Solovay", "Alexei Kitaev", "Daniel Gottesman", "Ethan Bernstein", "Umesh Vazirani"],
+  "theorems": ["Characterization of unitaries", "Euler decomposition (ZYZ)", "Universality of CNOT + 1 qubit", "Solovay–Kitaev", "Gottesman–Knill"]
+}
+-->
+
+<p>In 1985 David Deutsch, at Oxford, defined the universal quantum computer: a Turing machine whose states can be in superposition. The model that won out, however, was the one he himself developed in 1989: <strong>quantum circuits</strong>, wires that carry qubits and gates that transform them. It is the language in which every quantum algorithm is written today.</p>
+
+<h2>Gates are unitary matrices</h2>
+
+<div class="theorem">
+  <span class="th-title">Theorem <span class="th-name">(characterization of unitaries)</span></span>
+  <p>For a matrix $U \in \mathbb{C}^{d\times d}$ the following are equivalent: (1) $U^\dagger U = I$; (2) $U$ preserves inner products, $\braket{U\phi}{U\psi} = \braket{\phi}{\psi}$; (3) $U$ preserves norms, $\|U\psi\| = \|\psi\|$; (4) the columns of $U$ form an orthonormal basis.</p>
+</div>
+
+<details class="proof">
+  <summary>Proof</summary>
+  <div>
+    <p>(1)⇒(2): $\braket{U\phi}{U\psi} = \bra{\phi}U^\dagger U\ket{\psi} = \braket{\phi}{\psi}$. (2)⇒(3) is the case $\phi = \psi$. (3)⇒(2) uses the <em>polarization identity</em>, which recovers the inner product from norms: $\braket{\phi}{\psi} = \frac14\sum_{k=0}^{3} i^{-k}\,\|\phi + i^k\psi\|^2$. (2)⇔(4): the entries of $U^\dagger U$ are the inner products of the columns. (4)⇒(1) for the same reason.</p>
+  </div>
+</details>
+
+<p>The most common single-qubit gates are the Pauli matrices, the Hadamard gate and the phase gates:</p>
+
+$$X,\ Y,\ Z, \qquad H = \frac{1}{\sqrt2}\begin{pmatrix}1 & 1\\ 1 & -1\end{pmatrix}, \qquad S = \begin{pmatrix}1 & 0\\ 0 & i\end{pmatrix}, \qquad T = \begin{pmatrix}1 & 0\\ 0 & e^{i\pi/4}\end{pmatrix}.$$
+
+<p>On the Bloch sphere, every single-qubit gate is a <strong>rotation</strong>. $X$, $Y$ and $Z$ are half-turns about each axis; $H$ is a half-turn about the axis between $x$ and $z$; $S$ and $T$ are quarter and eighth turns about $z$.</p>
+
+<div class="theorem">
+  <span class="th-title">Theorem <span class="th-name">(Euler decomposition)</span></span>
+  <p>Every unitary $U \in \mathbb{C}^{2\times2}$ can be written as</p>
+  $$U = e^{i\alpha}\, R_z(\beta)\, R_y(\gamma)\, R_z(\delta), \qquad R_z(\theta) = e^{-i\theta Z/2},\ R_y(\theta) = e^{-i\theta Y/2},$$
+  <p>for some real numbers $\alpha, \beta, \gamma, \delta$: any rotation of the sphere is a composition of rotations about $z$, $y$ and $z$.</p>
+</div>
+
+<h2>Two qubits: CNOT</h2>
+
+<p>The controlled-NOT gate flips the second qubit (the <em>target</em>) only if the first one (the <em>control</em>) is 1. In the basis $\ket{00}, \ket{01}, \ket{10}, \ket{11}$:</p>
+
+$$\mathrm{CNOT} = \begin{pmatrix} 1&0&0&0\\ 0&1&0&0\\ 0&0&0&1\\ 0&0&1&0 \end{pmatrix}, \qquad \mathrm{CNOT}\,(H\otimes I)\ket{00} = \frac{\ket{00} + \ket{11}}{\sqrt2} = \ket{\Phi^+}.$$
+
+<p>A Hadamard followed by a CNOT creates <a href="@ch:entanglement">entanglement</a> from scratch. Try it in the simulator.</p>
+
+<figure class="demo wide" data-demo="circuits/simulator">
+  <figcaption>A three-qubit circuit simulator. Click on a cell to cycle through the gates; a ● in a column turns the other gates in that column into <em>controlled</em> gates (● plus ⊕ is a CNOT; ●●⊕ is a Toffoli). The bars show the $2^3 = 8$ amplitudes of the final state: the height is the probability and the colour is the phase. The examples include a Bell pair, a GHZ state and the Deutsch–Jozsa algorithm.</figcaption>
+</figure>
+
+<h2>Universality</h2>
+
+<p>Classically, NAND is enough to build everything. Is there a finite quantum set that is enough too? The answer comes in two steps.</p>
+
+<div class="theorem">
+  <span class="th-title">Theorem <span class="th-name">(exact universality; Barenco et al., 1995)</span></span>
+  <p>Every unitary on $n$ qubits can be written exactly as a product of CNOT gates and single-qubit gates.</p>
+</div>
+
+<p>But there are infinitely many single-qubit gates, and a real device can only implement a few with high precision. Fortunately, approximating is enough, and it is cheap:</p>
+
+<div class="theorem">
+  <span class="th-title">Theorem <span class="th-name">(Solovay–Kitaev, 1995–1997)</span></span>
+  <p>Let $\mathcal{G}$ be a finite set of single-qubit gates, closed under inverses, that generates a dense subgroup of $SU(2)$ (for example $\{H, T, T^\dagger\}$). Then every single-qubit gate can be approximated to precision $\varepsilon$ by a product of $O\!\left(\log^{c}(1/\varepsilon)\right)$ gates from $\mathcal{G}$, with $c \approx 4$ (improved versions reach $c < 2$).</p>
+</div>
+
+<p>Together, $\{H, T, \mathrm{CNOT}\}$ is a universal set: any quantum computation can be approximated with polylogarithmic overhead.</p>
+
+<h2>Not every quantum circuit is powerful</h2>
+
+<p>Superposition and entanglement are necessary for a quantum advantage, but not sufficient. The circuits built from $H$, $S$ and CNOT (the <strong>Clifford</strong> group) can generate highly entangled states and yet:</p>
+
+<div class="theorem">
+  <span class="th-title">Theorem <span class="th-name">(Gottesman–Knill, 1998)</span></span>
+  <p>A circuit that starts in $\ket{0\cdots0}$, uses only Clifford gates and measures in the computational basis can be simulated by a classical computer in time polynomial in the number of qubits and gates.</p>
+</div>
+
+<p>The trick is to describe the state not by its $2^n$ amplitudes, but by the $n$ Pauli operators that leave it invariant (its <em>stabilizers</em>), which Clifford gates transform into one another. The power of a quantum computer comes from adding non-Clifford gates like $T$, which are also the most expensive to protect from errors.</p>
+
+<h2>Deutsch–Jozsa: the first exponential separation</h2>
+
+<p>Suppose a function $f : \{0,1\}^n \to \{0,1\}$ is promised to be either <strong>constant</strong> or <strong>balanced</strong> (0 on exactly half the inputs). A deterministic classical algorithm may need $2^{n-1} + 1$ queries to be sure. The algorithm of Deutsch and Jozsa (1992) needs a single one:</p>
+
+$$\ket{0}^{\otimes n} \xrightarrow{H^{\otimes n}} \frac{1}{\sqrt{2^n}}\sum_x \ket{x} \xrightarrow{\ U_f\ } \frac{1}{\sqrt{2^n}}\sum_x (-1)^{f(x)}\ket{x} \xrightarrow{H^{\otimes n}} \cdots$$
+
+<p>The amplitude of $\ket{0\cdots0}$ at the end is $\frac{1}{2^n}\sum_x(-1)^{f(x)}$: it is $\pm1$ if $f$ is constant and exactly 0 if it is balanced. Measuring all zeros or not answers the question with certainty. A randomized classical algorithm can answer with high probability using only a few queries, so the separation is against deterministic algorithms; but the idea (put the information in the phases and make it interfere) is the template for everything that follows.</p>
+
+<aside class="note">The oracle acts as $U_f\ket{x}\ket{y} = \ket{x}\ket{y\oplus f(x)}$, and with $\ket{y} = \ket{-}$ the result is the phase $(-1)^{f(x)}$ (<em>phase kickback</em>).</aside>
+
+<h2>Quantum complexity</h2>
+
+<p>In 1993 Ethan Bernstein and Umesh Vazirani defined <strong>BQP</strong>, the class of problems that a quantum computer solves in polynomial time with error probability at most $1/3$. They also proved that</p>
+
+$$\mathrm{BPP} \subseteq \mathrm{BQP} \subseteq \mathrm{PSPACE}.$$
+
+<p>The first inclusion says that quantum computers can do everything randomized classical ones can (thanks to <a href="@ch:bits">Toffoli</a>); the second, that they can be simulated with polynomial memory, by summing over paths. Whether either inclusion is strict is not known: proving $\mathrm{BPP} \neq \mathrm{BQP}$ would imply $\mathrm{P} \neq \mathrm{PSPACE}$, a major open problem. The evidence of quantum power is, for now, algorithms like <a href="@ch:shor">Shor's</a> for problems that we believe are classically hard.</p>
+
+<section class="references">
+  <h2>References</h2>
+  <ol>
+    <li>D. Deutsch (1985). “Quantum theory, the Church–Turing principle and the universal quantum computer”. <em>Proceedings of the Royal Society A</em>, 400.</li>
+    <li>D. Deutsch and R. Jozsa (1992). “Rapid solution of problems by quantum computation”. <em>Proceedings of the Royal Society A</em>, 439.</li>
+    <li>E. Bernstein and U. Vazirani (1993). “Quantum complexity theory”. <em>STOC</em> (journal version: <em>SIAM J. Computing</em>, 1997).</li>
+    <li>A. Barenco et al. (1995). “Elementary gates for quantum computation”. <em>Physical Review A</em>, 52(5).</li>
+    <li>D. Gottesman (1998). “The Heisenberg Representation of Quantum Computers”. arXiv:quant-ph/9807006.</li>
+    <li>C. M. Dawson and M. A. Nielsen (2006). “The Solovay-Kitaev algorithm”. <em>Quantum Information and Computation</em>, 6(1).</li>
+  </ol>
+</section>

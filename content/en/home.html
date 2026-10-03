@@ -1,0 +1,41 @@
+<p class="kicker">The mathematics of quantum computing</p>
+<h1 class="hero-title">What makes a quantum computer different?</h1>
+<p class="lead">Not that it “tries every answer at once”. A quantum computer manipulates vectors of complex amplitudes and makes them interfere, so that the paths to the wrong answers cancel out. This site builds that idea from scratch, theorem by theorem: from the classical bit to Shor's algorithm and error correction.</p>
+
+<p class="cta-row"><a class="cta primary" href="@ch:bits">Start at the beginning →</a><a class="cta" href="@timeline">See the timeline</a></p>
+
+<figure class="demo" data-demo="home/qubit">
+  <figcaption>A <strong>qubit</strong> is a unit vector $\alpha\ket{0} + \beta\ket{1}$ with $|\alpha|^2 + |\beta|^2 = 1$, which can be drawn as a point on a sphere. Drag it and watch the probabilities of measuring 0 or 1 change; then measure. Each measurement gives a single definite bit, and only the statistics reveal the amplitudes. How such fragile objects can compute faster than any classical computer is the subject of this site.</figcaption>
+</figure>
+
+<h2>From 0 and 1 to superposition</h2>
+
+<p>A classical bit is a point at one of the two ends of a segment. A qubit is a point anywhere on a sphere. Between the two lies a single mathematical change: probabilities, which add up to 1 in the <em>1-norm</em>, are replaced by amplitudes, whose squares add up to 1 in the <em>2-norm</em>. Everything else (interference, entanglement, quantum algorithms and the difficulty of building the machines) follows from that change and from linear algebra. Here is the chain:</p>
+
+<!--chain-->
+
+<h2>Concepts and their mathematics</h2>
+
+<p>Quantum computing mixes mathematics, physics and computer science. This table summarizes what each concept owes to which branch of mathematics:</p>
+
+<table class="theory-table">
+  <thead><tr><th>Concept</th><th>Mathematics</th><th>In quantum computing</th><th>Where</th></tr></thead>
+  <tbody>
+    <tr><td>Superposition</td><td>Vectors, Hilbert spaces</td><td>Qubits</td><td><a href="@ch:qubits">01</a></td></tr>
+    <tr><td>Quantum probability</td><td>Complex numbers, 2-norm</td><td>Interference and measurement</td><td><a href="@ch:interference">02</a></td></tr>
+    <tr><td>Observables</td><td>Spectral theorem, Hermitian matrices</td><td>Measurement, uncertainty</td><td><a href="@ch:measurement">03</a></td></tr>
+    <tr><td>Entanglement</td><td>Tensor product, SVD</td><td>Quantum correlations, Bell</td><td><a href="@ch:entanglement">04</a></td></tr>
+    <tr><td>Quantum gates</td><td>Unitary matrices, groups</td><td>Circuits and universality</td><td><a href="@ch:circuits">05</a></td></tr>
+    <tr><td>Quantum Fourier transform</td><td>Fourier analysis, roots of unity</td><td>Period finding, phase estimation</td><td><a href="@ch:fourier">06</a></td></tr>
+    <tr><td>Shor's algorithm</td><td>Number theory, continued fractions</td><td>Factoring</td><td><a href="@ch:shor">07</a></td></tr>
+    <tr><td>Grover's algorithm</td><td>Plane geometry, amplitudes</td><td>Search</td><td><a href="@ch:grover">08</a></td></tr>
+    <tr><td>Error correction</td><td>Coding theory, stabilizer groups</td><td>Reliable qubits</td><td><a href="@ch:error-correction">09</a></td></tr>
+    <tr><td>Decoherence</td><td>Quantum channels, density matrices</td><td>Hardware limitations</td><td><a href="@ch:error-correction">09</a></td></tr>
+  </tbody>
+</table>
+
+<h2>How to read this site</h2>
+
+<p>The emphasis is on the <strong>mathematical theory</strong>: each chapter states its results as theorems, and most come with a proof, folded so as not to interrupt the reading. Linear algebra (vectors, matrices, eigenvalues) is the only real prerequisite; the companion site <a href="https://toniferr.github.io/math-of-ai/linear-algebra/">Math of AI</a> has a chapter on it. The figures are interactive and simulate the quantum states exactly in your browser, with no servers and no trackers.</p>
+
+<p class="cta-row"><a class="cta primary" href="@ch:bits">Chapter 00: From bits to vectors →</a></p>

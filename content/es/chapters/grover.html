@@ -1,0 +1,95 @@
+<!--meta
+{
+  "slug": "grover",
+  "title": "Algoritmo de Grover",
+  "chain": "Grover",
+  "headline": "Buscar con rotaciones",
+  "dek": "Para encontrar un elemento marcado entre $N$ sin ninguna estructura que ayude, cualquier algoritmo clásico necesita unos $N$ intentos. Lov Grover encontró un algoritmo cuántico que necesita solo unos $\\sqrt N$, girando un vector poco a poco en un plano de dos dimensiones. Y está demostrado que no se puede hacer mejor.",
+  "era": "1996 – 2002",
+  "people": ["Lov Grover", "Charles Bennett", "Ethan Bernstein", "Gilles Brassard", "Umesh Vazirani", "Christof Zalka"],
+  "theorems": ["Dos reflexiones forman una rotación", "Número óptimo de iteraciones", "Cota inferior $\\Omega(\\sqrt N)$ (BBBV)", "Amplificación de amplitud"]
+}
+-->
+
+<p>Imagina una guía telefónica con $N$ entradas desordenadas y un único nombre que buscas. Sin ninguna estructura que ayude, la única estrategia clásica es mirar entrada a entrada: $N/2$ consultas de media, $N$ en el peor caso. En 1996 Lov Grover, en los Laboratorios Bell, demostró que un ordenador cuántico puede encontrarlo con unas $\frac{\pi}{4}\sqrt N$ consultas. Para un millón de entradas, unas 800 en lugar de medio millón.</p>
+
+<h2>El problema</h2>
+
+<p>Tenemos $N = 2^n$ elementos y un <strong>oráculo</strong> que reconoce el marcado, $w$: una función $f(x) = 1$ si $x = w$ y 0 si no. Cuánticamente, el oráculo actúa como un cambio de signo:</p>
+
+$$O\ket{x} = (-1)^{f(x)}\ket{x}, \qquad O = I - 2\ketbra{w}{w}.$$
+
+<p>El oráculo cambia el signo de la amplitud del elemento marcado pero, por sí solo, no cambia ninguna probabilidad. Algo tiene que convertir ese signo en probabilidad. Ese es el trabajo de la interferencia.</p>
+
+<h2>El algoritmo</h2>
+
+<p>Se parte de la superposición uniforme $\ket{s} = H^{\otimes n}\ket{0} = \frac{1}{\sqrt N}\sum_x\ket{x}$ y se repite $k$ veces la <strong>iteración de Grover</strong>:</p>
+
+$$G = D\,O, \qquad D = 2\ketbra{s}{s} - I.$$
+
+<p>El operador $D$, llamado <strong>difusión</strong>, es una inversión respecto a la media: lleva cada amplitud $a_x$ a $2\bar a - a_x$, donde $\bar a$ es la media. Tras el oráculo, la amplitud marcada es negativa y queda muy por debajo de la media; al invertirla, sube muy por encima. Cada iteración bombea un poco más de amplitud hacia $\ket{w}$.</p>
+
+<figure class="demo wide" data-demo="grover/search">
+  <figcaption>El algoritmo de Grover paso a paso. Las barras son las amplitudes (reales, con signo) y la línea discontinua es su media. «Oráculo» cambia el signo del elemento marcado; «Difusión» refleja cada amplitud respecto a la media. La gráfica de la derecha muestra la probabilidad de éxito tras cada iteración: oscila como $\sin^2\big((2k+1)\theta\big)$, así que iterar de más es tan malo como iterar de menos.</figcaption>
+</figure>
+
+<h2>La geometría: dos reflexiones forman una rotación</h2>
+
+<p>Todo el algoritmo ocurre en un plano de dos dimensiones. Sean $\ket{w}$ el estado marcado y $\ket{w^\perp}$ la superposición uniforme de los no marcados. El estado inicial está en el plano que generan:</p>
+
+$$\ket{s} = \sin\theta\,\ket{w} + \cos\theta\,\ket{w^\perp}, \qquad \sin\theta = \frac{1}{\sqrt N}.$$
+
+<div class="theorem">
+  <span class="th-title">Teorema <span class="th-name">(la iteración de Grover es una rotación)</span></span>
+  <p>En el plano generado por $\ket{w}$ y $\ket{w^\perp}$, el oráculo $O$ es la reflexión respecto a $\ket{w^\perp}$ y $D$ es la reflexión respecto a $\ket{s}$. Su producto $G = DO$ es una <strong>rotación de ángulo $2\theta$</strong> hacia $\ket{w}$. Tras $k$ iteraciones,</p>
+  $$G^k\ket{s} = \sin\big((2k+1)\theta\big)\ket{w} + \cos\big((2k+1)\theta\big)\ket{w^\perp},$$
+  <p>y la probabilidad de medir $w$ es $\sin^2\big((2k+1)\theta\big)$.</p>
+</div>
+
+<details class="proof">
+  <summary>Demostración</summary>
+  <div>
+    <p>$O$ deja fijo $\ket{w^\perp}$ y cambia de signo $\ket{w}$, así que es la reflexión respecto a la recta de $\ket{w^\perp}$. $D = 2\ketbra{s}{s} - I$ deja fijo $\ket{s}$ y cambia de signo todo vector ortogonal a él: la reflexión respecto a la recta de $\ket{s}$. La composición de dos reflexiones respecto a rectas que forman un ángulo $\theta$ es una rotación de ángulo $2\theta$ (un resultado clásico de geometría plana). El estado inicial forma un ángulo $\theta$ con $\ket{w^\perp}$; tras $k$ rotaciones, forma $(2k+1)\theta$.</p>
+  </div>
+</details>
+
+<p>Para llegar a $\ket{w}$ queremos $(2k+1)\theta \approx \pi/2$, es decir,</p>
+
+$$k \approx \frac{\pi}{4\theta} - \frac12 \approx \frac{\pi}{4}\sqrt N,$$
+
+<p>ya que $\theta \approx 1/\sqrt N$ para $N$ grande. Con $M$ elementos marcados, $\sin\theta = \sqrt{M/N}$ y hacen falta unas $\frac{\pi}{4}\sqrt{N/M}$ iteraciones. La aceleración cuadrática viene de que la probabilidad es el <em>cuadrado</em> de la amplitud: la amplitud crece linealmente con $k$, así que solo tiene que llegar a $1$ partiendo de $1/\sqrt N$.</p>
+
+<h2>No se puede hacer mejor</h2>
+
+<p>Antes de que se conociera siquiera el algoritmo de Grover, Bennett, Bernstein, Brassard y Vazirani ya habían demostrado que sería óptimo.</p>
+
+<div class="theorem">
+  <span class="th-title">Teorema <span class="th-name">(BBBV, 1997)</span></span>
+  <p>Todo algoritmo cuántico que encuentra el elemento marcado entre $N$ con probabilidad al menos $2/3$, consultando el oráculo como una caja negra, debe hacer $\Omega(\sqrt N)$ consultas.</p>
+</div>
+
+<details class="proof">
+  <summary>Idea de la demostración (argumento híbrido)</summary>
+  <div>
+    <p>Ejecutamos el algoritmo con un oráculo que no marca nada. Tras $T$ consultas, el «peso de consulta» total que ha puesto sobre todos los elementos es $T$, así que algún elemento $w$ ha recibido un peso de como mucho $T/N$. Cambiar el oráculo para que marque $w$ perturba cada paso en una cantidad proporcional a la raíz cuadrada de ese peso, y las perturbaciones suman como mucho $O(T/\sqrt N)$ en norma. Para distinguir las dos situaciones, los estados finales deben diferir en una constante, así que $T = \Omega(\sqrt N)$.</p>
+  </div>
+</details>
+
+<p>Christof Zalka (1999) demostró que el algoritmo de Grover es óptimo incluso en la constante. La consecuencia es importante: para problemas sin estructura, los ordenadores cuánticos ofrecen una aceleración cuadrática, no exponencial. En particular, no se espera que resuelvan problemas NP-completos en tiempo polinómico simplemente «probando todas las respuestas a la vez».</p>
+
+<h2>Amplificación de amplitud</h2>
+
+<p>Brassard, Høyer, Mosca y Tapp (2002) generalizaron la idea. Si un algoritmo cuántico $\mathcal{A}$ acierta con probabilidad $p$, se puede convertir en uno que acierta con alta probabilidad usando solo $O(1/\sqrt p)$ repeticiones de $\mathcal{A}$ y $\mathcal{A}^{-1}$, frente a las $O(1/p)$ que necesita la repetición clásica. Es un acelerador cuadrático para casi cualquier subrutina cuántica.</p>
+
+<aside class="note">Para la criptografía simétrica (AES y similares), el algoritmo de Grover reduce a la mitad la longitud efectiva de la clave en bits: una clave de 128 bits ofrecería unos 64 bits de seguridad frente a un atacante cuántico. Por eso se suelen recomendar claves de 256 bits, aunque los largos circuitos secuenciales de Grover hacen el ataque mucho menos práctico de lo que sugieren las cifras.</aside>
+
+<section class="references">
+  <h2>Referencias</h2>
+  <ol>
+    <li>L. K. Grover (1996). «A fast quantum mechanical algorithm for database search». <em>STOC</em>.</li>
+    <li>C. H. Bennett, E. Bernstein, G. Brassard y U. Vazirani (1997). «Strengths and Weaknesses of Quantum Computing». <em>SIAM J. Computing</em>, 26(5).</li>
+    <li>M. Boyer, G. Brassard, P. Høyer y A. Tapp (1998). «Tight bounds on quantum searching». <em>Fortschritte der Physik</em>, 46.</li>
+    <li>C. Zalka (1999). «Grover's quantum searching algorithm is optimal». <em>Physical Review A</em>, 60(4).</li>
+    <li>G. Brassard, P. Høyer, M. Mosca y A. Tapp (2002). «Quantum amplitude amplification and estimation». <em>Contemporary Mathematics</em>, 305.</li>
+  </ol>
+</section>

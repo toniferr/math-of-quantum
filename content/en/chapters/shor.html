@@ -1,0 +1,95 @@
+<!--meta
+{
+  "slug": "shor",
+  "title": "Shor's algorithm",
+  "chain": "Shor",
+  "headline": "Factoring by finding a period",
+  "dek": "The security of most of the internet rests on one assumption: that factoring large numbers is hard. In 1994 Peter Shor showed that a quantum computer could do it in polynomial time, by turning factoring into finding the period of a function and the period into a Fourier peak.",
+  "era": "300 BC – 2025",
+  "people": ["Euclid", "Leonhard Euler", "Ron Rivest", "Adi Shamir", "Leonard Adleman", "Gary Miller", "Peter Shor"],
+  "theorems": ["Euler's theorem", "Reduction from factoring to order finding", "Quantum order finding", "Legendre's theorem (continued fractions)"]
+}
+-->
+
+<p>Multiplying two primes of three hundred digits takes a computer microseconds. Undoing the product, recovering the primes from the result, would take the best known classical algorithms longer than the age of the universe. On that asymmetry rests RSA (Rivest, Shamir and Adleman, 1977), the cryptosystem that protects a large share of the world's communications. In 1994 Peter Shor, at Bell Labs, showed that a large enough quantum computer would break it.</p>
+
+<h2>A little number theory</h2>
+
+<p>We work modulo $N$: two integers are congruent, $a \equiv b \pmod N$, if $N$ divides $a - b$. The numbers coprime to $N$ form a group under multiplication, $\mathbb{Z}_N^*$, with $\varphi(N)$ elements ($\varphi$ is Euler's totient function).</p>
+
+<div class="theorem">
+  <span class="th-title">Theorem <span class="th-name">(Euler, 1763)</span></span>
+  <p>If $\gcd(a, N) = 1$, then $a^{\varphi(N)} \equiv 1 \pmod N$. In particular the powers $a^x \bmod N$ repeat periodically: the <strong>order</strong> of $a$, the smallest $r > 0$ with $a^r \equiv 1 \pmod N$, exists and divides $\varphi(N)$.</p>
+</div>
+
+<p>RSA uses $N = pq$ and, with $\varphi(N) = (p-1)(q-1)$, chooses an encryption exponent $e$ and a decryption exponent $d$ with $ed \equiv 1 \pmod{\varphi(N)}$. Knowing $p$ and $q$ makes $d$ easy to compute; without them, nobody knows how to do it efficiently. The best classical factoring algorithm, the <strong>general number field sieve</strong>, takes time about</p>
+
+$$\exp\!\left(\left(\tfrac{64}{9}\right)^{1/3} (\ln N)^{1/3}(\ln\ln N)^{2/3}\right),$$
+
+<p>sub-exponential but enormous: factoring the 829-bit number RSA-250 in 2020 took about 2,700 core-years of computation.</p>
+
+<h2>From factoring to periods</h2>
+
+<p>The first idea of Shor's algorithm is classical, and goes back to Gary Miller (1976): if we know how to compute orders, we know how to factor.</p>
+
+<div class="theorem">
+  <span class="th-title">Theorem <span class="th-name">(reduction to order finding)</span></span>
+  <p>Let $N$ be odd, composite and not a prime power, with $k \ge 2$ distinct prime factors, and let $a$ be chosen uniformly from $\mathbb{Z}_N^*$ with order $r$. With probability at least $1 - 2^{1-k} \ge \tfrac12$, $r$ is even and $a^{r/2} \not\equiv -1 \pmod N$. In that case</p>
+  $$\gcd\left(a^{r/2} - 1,\ N\right) \quad \text{and} \quad \gcd\left(a^{r/2} + 1,\ N\right)$$
+  <p>are non-trivial factors of $N$.</p>
+</div>
+
+<details class="proof">
+  <summary>Why the gcd works</summary>
+  <div>
+    <p>Since $a^r \equiv 1$, $N$ divides $a^r - 1 = (a^{r/2} - 1)(a^{r/2} + 1)$. It does not divide the first factor, because $r$ is the <em>smallest</em> exponent with $a^r \equiv 1$; nor the second, by assumption. So $N$ shares a non-trivial factor with each of them, which Euclid's algorithm finds in polynomial time. The probability bound comes from the Chinese remainder theorem: the orders of $a$ modulo each prime power behave independently.</p>
+  </div>
+</details>
+
+<p>Everything comes down to finding the period $r$ of $f(x) = a^x \bmod N$. Classically this is as hard as factoring. Quantumly, it is a job for the <a href="@ch:fourier#periodic">Fourier transform</a>.</p>
+
+<h2>Quantum order finding</h2>
+
+<ol>
+  <li>Prepare two registers and put the first, of $t$ qubits with $N^2 \le Q = 2^t < 2N^2$, in a uniform superposition: $\frac{1}{\sqrt Q}\sum_{x=0}^{Q-1}\ket{x}\ket{0}$.</li>
+  <li>Compute $f$ reversibly in the second register: $\frac{1}{\sqrt Q}\sum_{x}\ket{x}\ket{a^x \bmod N}$. Modular exponentiation is done by repeated squaring, with $O(n^3)$ gates for $n$-bit numbers; it is the most expensive part of the algorithm.</li>
+  <li>Measure the second register (or just forget it). The first one collapses to a state that is uniform over an arithmetic progression $x_0, x_0 + r, x_0 + 2r, \dots$: a periodic state of period $r$.</li>
+  <li>Apply the QFT to the first register and measure. The result $y$ is, with high probability, close to a multiple of $Q/r$: $\;\left|\frac{y}{Q} - \frac{\ell}{r}\right| \le \frac{1}{2Q}$ for some $\ell$.</li>
+</ol>
+
+<p>The last step is to recover $r$ from the fraction $y/Q$, a problem of number theory more than two thousand years old: approximating a number by fractions with small denominators.</p>
+
+<div class="theorem">
+  <span class="th-title">Theorem <span class="th-name">(Legendre, 1798)</span></span>
+  <p>If $\left|x - \frac{p}{q}\right| < \frac{1}{2q^2}$, then $\frac{p}{q}$ is one of the convergents of the continued fraction expansion of $x$.</p>
+</div>
+
+<p>Since $\frac{1}{2Q} \le \frac{1}{2N^2} < \frac{1}{2r^2}$, the fraction $\ell/r$ (in lowest terms) appears among the convergents of $y/Q$, which can be computed with Euclid's algorithm. If $\ell$ and $r$ happen to be coprime, which happens with probability $\Omega(1/\log\log r)$, the denominator is the order $r$. A few repetitions are enough.</p>
+
+<figure class="demo wide" data-demo="shor/walkthrough">
+  <figcaption>Shor's algorithm on small numbers. Choose $N$ and a base $a$. <strong>1.</strong> The function $a^x \bmod N$ is periodic. <strong>2.</strong> The quantum part (simulated exactly): the distribution of the measurement after the QFT, with peaks near the multiples of $Q/r$. <strong>3.</strong> A sample, its continued-fraction expansion and the candidate period. <strong>4.</strong> The greatest common divisors that give the factors. Some bases fail ($r$ odd or $a^{r/2} \equiv -1$): try another one.</figcaption>
+</figure>
+
+<div class="theorem">
+  <span class="th-title">Theorem <span class="th-name">(Shor, 1994)</span></span>
+  <p>A quantum computer can factor an $n$-bit integer with $O(n^3)$ elementary gates (or $O(n^2\log n\log\log n)$ with fast multiplication) and success probability bounded away from zero. The same method computes discrete logarithms, which also breaks Diffie–Hellman and elliptic-curve cryptography.</p>
+</div>
+
+<h2>How far away is it?</h2>
+
+<p>In 2001 an IBM team factored $15 = 3\times5$ with seven nuclear spins in a molecule. Since then the record of honest implementations has barely moved: Shor's algorithm needs many high-quality qubits and very long circuits, which means <a href="@ch:error-correction">error correction</a>. The estimates of resources needed for RSA-2048 have been falling: about 20 million physical qubits for 8 hours (Gidney and Ekerå, 2019), and less than a million noisy qubits in under a week (Gidney, 2025). Today's processors have on the order of a hundred to a thousand.</p>
+
+<p>The threat is taken seriously, because encrypted data can be stored today and decrypted in the future. In 2024 NIST published the first <strong>post-quantum cryptography</strong> standards (FIPS 203, 204 and 205), based on problems over lattices and hash functions for which no efficient quantum algorithm is known. The mathematical lesson of Shor's algorithm goes beyond cryptography: quantum computers are extraordinarily good at finding hidden periodic structure in abelian groups (the <em>hidden subgroup problem</em>), and nobody knows whether that power extends much further.</p>
+
+<section class="references">
+  <h2>References</h2>
+  <ol>
+    <li>R. L. Rivest, A. Shamir and L. Adleman (1978). “A Method for Obtaining Digital Signatures and Public-Key Cryptosystems”. <em>Communications of the ACM</em>, 21(2).</li>
+    <li>G. L. Miller (1976). “Riemann's Hypothesis and Tests for Primality”. <em>Journal of Computer and System Sciences</em>, 13(3).</li>
+    <li>P. W. Shor (1994). “Algorithms for quantum computation: discrete logarithms and factoring”. <em>FOCS</em> (journal version: <em>SIAM J. Computing</em>, 1997).</li>
+    <li>L. M. K. Vandersypen et al. (2001). “Experimental realization of Shor's quantum factoring algorithm using nuclear magnetic resonance”. <em>Nature</em>, 414.</li>
+    <li>C. Gidney and M. Ekerå (2021). “How to factor 2048 bit RSA integers in 8 hours using 20 million noisy qubits”. <em>Quantum</em>, 5 (arXiv 2019).</li>
+    <li>C. Gidney (2025). “How to factor 2048 bit RSA integers with less than a million noisy qubits”. arXiv preprint.</li>
+    <li>NIST (2024). FIPS 203, 204 and 205: post-quantum cryptography standards.</li>
+  </ol>
+</section>

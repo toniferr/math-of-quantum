@@ -1,0 +1,239 @@
+{
+  "site_title": "¿Qué hace distinto a un ordenador cuántico?",
+  "site_short": "Math of Quantum",
+  "site_description": "Una web didáctica e interactiva sobre las matemáticas de la computación cuántica: de bits a qubits, interferencia, entrelazamiento, Shor, Grover y corrección de errores, teorema a teorema.",
+  "nav": {
+    "main": "Navegación principal",
+    "chapters": "Capítulos",
+    "timeline": "Historia",
+    "theme": "Cambiar entre tema claro y oscuro",
+    "skip": "Saltar al contenido",
+    "lang": "Idioma"
+  },
+  "chapter": {
+    "label": "Capítulo",
+    "era": "Época",
+    "people": "Protagonistas",
+    "theorems": "Resultados clave",
+    "toc": "En este capítulo",
+    "prev": "Anterior",
+    "next": "Siguiente",
+    "prevnext": "Capítulo anterior y siguiente"
+  },
+  "timeline": {
+    "slug": "historia",
+    "kicker": "Línea temporal",
+    "all": "Todo",
+    "filter": "Filtrar por capítulo",
+    "read": "Capítulo"
+  },
+  "footer": {
+    "text": "Texto, figuras y código hechos a mano (con ayuda de Claude Code), sin frameworks, sin rastreadores y con las fórmulas en MathML nativo. Web hermana: <a href=\"https://toniferr.github.io/math-of-ai/es/\">Math of AI</a>.",
+    "source": "Código fuente en GitHub"
+  },
+  "demos": {
+    "core": { "error": "Esta figura no ha podido cargarse." },
+    "home": {
+      "title": "Un qubit en la esfera de Bloch",
+      "hint": "Arrastra el punto sobre la esfera.",
+      "measure": "Medir",
+      "measure100": "Medir 100 veces",
+      "reset": "Borrar",
+      "got": "Último resultado: {v} · {n} medidas"
+    },
+    "norms": {
+      "classical": "Bit probabilístico (norma 1)",
+      "quantum": "Vector de amplitudes (norma 2)",
+      "fraction": "Fracción de un NOT",
+      "cAfter": "Clásico tras dos pasos",
+      "qAfter": "Cuántico tras dos pasos",
+      "cRev": "¿Paso clásico reversible?",
+      "yes": "sí (una permutación)",
+      "never": "no: información perdida",
+      "notStochastic": "solo con una matriz no estocástica"
+    },
+    "bloch": {
+      "title": "Esfera de Bloch",
+      "amps": "Amplitudes α y β en el plano complejo",
+      "probs": "Probabilidades al medir",
+      "measure100": "Medir 100 veces",
+      "clear": "Borrar recuento"
+    },
+    "mz": {
+      "title": "Interferómetro de Mach-Zehnder",
+      "phase": "Fase",
+      "fire": "Enviar 100 fotones",
+      "hits": "Clics D0 / D1",
+      "d0": "Amplitudes en D0",
+      "d1": "Amplitudes en D1",
+      "curve": "P(D0) en función de φ",
+      "source": "fuente"
+    },
+    "walk": {
+      "title": "Distribución de la posición tras t pasos",
+      "steps": "Pasos",
+      "play": "Animar",
+      "pause": "Pausa",
+      "quantum": "paseo cuántico",
+      "classical": "paseo aleatorio clásico",
+      "sigmaC": "Dispersión clásica σ",
+      "sigmaQ": "Dispersión cuántica σ",
+      "ratio": "Cociente"
+    },
+    "sg": {
+      "title": "Cadena de analizadores de Stern-Gerlach",
+      "angle2": "Analizador intermedio",
+      "angle3": "Último analizador",
+      "middle": "Incluir el analizador intermedio",
+      "send": "Enviar 1000 átomos",
+      "oven": "horno",
+      "legend": "Cada analizador deja pasar el haz «arriba» según su eje y bloquea el otro (✕).",
+      "final": "Átomos en la pantalla",
+      "theory": "Probabilidad predicha"
+    },
+    "meter": {
+      "preset": "Ejemplo",
+      "presets": {
+        "product": "|00⟩ (producto)",
+        "plus0": "|+⟩|0⟩ (producto)",
+        "phiPlus": "Estado de Bell Φ⁺",
+        "psiMinus": "Estado de Bell Ψ⁻",
+        "partial": "Parcialmente entrelazado"
+      },
+      "normalized": "Las amplitudes se normalizan automáticamente.",
+      "amps": "Amplitudes (normalizadas)",
+      "qa": "Qubit A por separado",
+      "qb": "Qubit B por separado",
+      "entropy": "Entropía de entrelazamiento",
+      "bits": "bits",
+      "kind": "Veredicto",
+      "productState": "estado producto",
+      "entangled": "entrelazado",
+      "maximal": "máximamente entrelazado"
+    },
+    "chsh": {
+      "gauge": "Valor de S",
+      "corr": "Correlación E según la diferencia de ángulos",
+      "table": "Correlaciones",
+      "model": "Fuente",
+      "quantum": "Fotones entrelazados",
+      "local": "Variables ocultas locales",
+      "optimal": "Ángulos óptimos",
+      "aligned": "Alineados",
+      "run": "Jugar 4000 rondas",
+      "predicted": "Predicha",
+      "measured": "Medida",
+      "theory": "S predicho",
+      "classicalZone": "permitido a cualquier teoría local",
+      "quantumZone": "solo cuántico",
+      "diff": "azul: cuántico · gris: local"
+    },
+    "circ": {
+      "title": "Circuito de tres qubits",
+      "preset": "Ejemplo",
+      "presets": {
+        "empty": "Vacío",
+        "interference": "H y otra H (interferencia)",
+        "bell": "Par de Bell",
+        "ghz": "Estado GHZ",
+        "toffoli": "Puerta de Toffoli",
+        "djBalanced": "Deutsch-Jozsa, f equilibrada",
+        "djConstant": "Deutsch-Jozsa, f constante",
+        "phaseKick": "Retroceso de fase"
+      },
+      "clear": "Borrar",
+      "hint": "Haz clic en una celda para cambiarla: H, X, Z, S, T, Y, ● (control), ⊕ (objetivo).",
+      "amps": "Estado final: probabilidad (altura) y fase (color)",
+      "phase": "fase",
+      "col": "columna",
+      "emptyCell": "vacía"
+    },
+    "qft": {
+      "period": "Periodo",
+      "offset": "Desplazamiento",
+      "input": "Entrada: uniforme sobre x₀, x₀ + r, x₀ + 2r, …",
+      "output": "Tras la QFT (probabilidad ∝ altura, color = fase)",
+      "terms": "Términos de la entrada",
+      "spacing": "Separación esperada",
+      "peaks": "Picos",
+      "exact": "{n} picos exactos",
+      "blurred": "unos {n} picos difuminados"
+    },
+    "bv": {
+      "secret": "Cadena secreta s (haz clic para cambiarla)",
+      "classical": "Clásico: un bit por consulta",
+      "quantum": "Cuántico: una consulta en superposición",
+      "query": "Consultar f(eᵢ)",
+      "run": "Ejecutar el circuito",
+      "queries": "{k} de {n} consultas"
+    },
+    "shor": {
+      "f": "f(x) = aˣ mod N",
+      "dist": "Probabilidad de medir y",
+      "measure": "Medir",
+      "info": "{t} qubits en el primer registro (Q = {Q}). Periodo real r = {r}.",
+      "step1": "1 · La función aˣ mod N es periódica (en rojo, el valor 1)",
+      "step2": "2 · Tras la QFT: picos cerca de los múltiplos de Q/r",
+      "step3": "3 · Fracciones continuas de y/Q",
+      "step4": "4 · Factores",
+      "press": "Pulsa «Medir» para obtener una muestra de y.",
+      "candidate": "Último convergente con denominador < N: q = {q}. ",
+      "verified": "Se cumple aʳ ≡ 1 con r = {r}.",
+      "notVerified": "No es un periodo: vuelve a medir.",
+      "useless": "Esta medida no da información (y = 0 o ningún convergente útil): vuelve a medir.",
+      "odd": "r = {r} es impar: esta base no sirve. Prueba con otra a.",
+      "minusOne": "{a}^{h} ≡ −1 (mod {N}): esta base no sirve. Prueba con otra a.",
+      "waiting": "Esperando un periodo verificado."
+    },
+    "grover": {
+      "amps": "Amplitudes (con signo) y su media",
+      "prob": "Probabilidad de éxito tras k iteraciones",
+      "plane": "El plano 2D del algoritmo",
+      "qubits": "Qubits",
+      "marked": "Elemento marcado",
+      "oracle": "Oráculo",
+      "diffusion": "Difusión",
+      "iteration": "Iteración completa",
+      "reset": "Reiniciar",
+      "mean": "media",
+      "iters": "Iteraciones k",
+      "oracleOnly": "oráculo",
+      "success": "P(éxito)",
+      "optimal": "k óptimo"
+    },
+    "deco": {
+      "title": "Decoherencia en la esfera de Bloch",
+      "channel": "Canal",
+      "channels": {
+        "dephasing": "Desfase",
+        "damping": "Amortiguamiento",
+        "depolarizing": "Despolarizante"
+      },
+      "state": "Estado destacado",
+      "starts": {
+        "plus": "|+⟩",
+        "one": "|1⟩",
+        "plusI": "|+i⟩",
+        "mixed": "estado genérico"
+      },
+      "time": "Tiempo",
+      "length": "Longitud del vector de Bloch |r|",
+      "purity": "Pureza Tr ρ²"
+    },
+    "rep": {
+      "title": "Error lógico del código de repetición",
+      "p": "Error físico",
+      "d": "Copias",
+      "run": "Simular 10 000 intentos",
+      "theory": "Error lógico (teoría)",
+      "empirical": "Error lógico (simulado)",
+      "gain": "Efecto del código",
+      "better": "mejor",
+      "worse": "peor que sin código",
+      "xLabel": "tasa de error físico p",
+      "yLabel": "error lógico",
+      "ok": "la mayoría acierta",
+      "fail": "la mayoría se equivoca: error lógico"
+    }
+  }
+}
