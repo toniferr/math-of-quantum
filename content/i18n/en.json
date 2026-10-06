@@ -7,6 +7,7 @@
     "chapters": "Chapters",
     "timeline": "History",
     "theme": "Switch between light and dark theme",
+    "intro": "Introduction",
     "skip": "Skip to content",
     "lang": "Language"
   },
@@ -20,6 +21,9 @@
     "next": "Next",
     "prevnext": "Previous and next chapter"
   },
+  "intro": {
+    "slug": "introduction"
+  },
   "timeline": {
     "slug": "history",
     "kicker": "Timeline",
@@ -32,6 +36,17 @@
     "source": "Source code on GitHub"
   },
   "demos": {
+    "splash": {
+      "label": "A Bloch sphere drawn over a two-source interference pattern. The state of a qubit, an arrow to the surface, precesses and leaves a trail; quantum gates rotate it and measuring collapses it to the north pole (0) or the south pole (1).",
+      "gates": "Quantum gates",
+      "gate": { "H": "Hadamard", "X": "Pauli X (NOT)", "Y": "Pauli Y", "Z": "Pauli Z (phase flip)", "S": "S (quarter turn of phase)", "T": "T (eighth turn of phase)" },
+      "measure": "Measure",
+      "got": "measured {n}",
+      "state": "|ψ⟩ = {a}|0⟩ + {b}·e^(i·{phi}°)|1⟩ · P(0) = {p0}% · P(1) = {p1}%",
+      "counts": "outcomes 0: {zero}, 1: {one}",
+      "pause": "Pause",
+      "play": "Play"
+    },
     "core": { "error": "This figure could not be loaded." },
     "home": {
       "title": "A qubit on the Bloch sphere",

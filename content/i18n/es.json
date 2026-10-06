@@ -7,6 +7,7 @@
     "chapters": "Capítulos",
     "timeline": "Historia",
     "theme": "Cambiar entre tema claro y oscuro",
+    "intro": "Introducción",
     "skip": "Saltar al contenido",
     "lang": "Idioma"
   },
@@ -20,6 +21,9 @@
     "next": "Siguiente",
     "prevnext": "Capítulo anterior y siguiente"
   },
+  "intro": {
+    "slug": "introduccion"
+  },
   "timeline": {
     "slug": "historia",
     "kicker": "Línea temporal",
@@ -32,6 +36,17 @@
     "source": "Código fuente en GitHub"
   },
   "demos": {
+    "splash": {
+      "label": "Una esfera de Bloch dibujada sobre un patrón de interferencia de dos fuentes. El estado de un cúbit, una flecha hasta la superficie, precesa y deja una estela; las puertas cuánticas lo giran y al medirlo colapsa al polo norte (0) o al polo sur (1).",
+      "gates": "Puertas cuánticas",
+      "gate": { "H": "Hadamard", "X": "Pauli X (NOT)", "Y": "Pauli Y", "Z": "Pauli Z (cambio de fase)", "S": "S (cuarto de vuelta de fase)", "T": "T (octavo de vuelta de fase)" },
+      "measure": "Medir",
+      "got": "medido: {n}",
+      "state": "|ψ⟩ = {a}|0⟩ + {b}·e^(i·{phi}°)|1⟩ · P(0) = {p0} % · P(1) = {p1} %",
+      "counts": "resultados 0: {zero}, 1: {one}",
+      "pause": "Pausa",
+      "play": "Seguir"
+    },
     "core": { "error": "Esta figura no ha podido cargarse." },
     "home": {
       "title": "Un qubit en la esfera de Bloch",

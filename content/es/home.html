@@ -1,41 +1,10 @@
-<p class="kicker">Las matemáticas de la computación cuántica</p>
-<h1 class="hero-title">¿Qué hace distinto a un ordenador cuántico?</h1>
-<p class="lead">No que «pruebe todas las respuestas a la vez». Un ordenador cuántico manipula vectores de amplitudes complejas y las hace interferir, de modo que los caminos hacia las respuestas equivocadas se anulen. Esta web construye esa idea desde cero, teorema a teorema: del bit clásico al algoritmo de Shor y la corrección de errores.</p>
-
-<p class="cta-row"><a class="cta primary" href="@ch:bits">Empezar por el principio →</a><a class="cta" href="@timeline">Ver la línea temporal</a></p>
-
-<figure class="demo" data-demo="home/qubit">
-  <figcaption>Un <strong>qubit</strong> es un vector unitario $\alpha\ket{0} + \beta\ket{1}$ con $|\alpha|^2 + |\beta|^2 = 1$, que se puede dibujar como un punto de una esfera. Arrástralo y observa cómo cambian las probabilidades de medir 0 o 1; después, mide. Cada medida da un único bit concreto, y solo la estadística revela las amplitudes. Cómo objetos tan frágiles pueden calcular más deprisa que cualquier ordenador clásico es el tema de esta web.</figcaption>
-</figure>
-
-<h2>De 0 y 1 a la superposición</h2>
-
-<p>Un bit clásico es un punto en uno de los dos extremos de un segmento. Un qubit es un punto en cualquier lugar de una esfera. Entre ambos hay un único cambio matemático: las probabilidades, que suman 1 en la <em>norma 1</em>, se sustituyen por amplitudes, cuyos cuadrados suman 1 en la <em>norma 2</em>. Todo lo demás (la interferencia, el entrelazamiento, los algoritmos cuánticos y la dificultad de construir las máquinas) se sigue de ese cambio y del álgebra lineal. Esta es la cadena:</p>
-
-<!--chain-->
-
-<h2>Conceptos y sus matemáticas</h2>
-
-<p>La computación cuántica mezcla matemáticas, física e informática. Esta tabla resume qué rama de las matemáticas sostiene cada concepto:</p>
-
-<table class="theory-table">
-  <thead><tr><th>Concepto</th><th>Matemáticas</th><th>En computación cuántica</th><th>Dónde</th></tr></thead>
-  <tbody>
-    <tr><td>Superposición</td><td>Vectores, espacios de Hilbert</td><td>Qubits</td><td><a href="@ch:qubits">01</a></td></tr>
-    <tr><td>Probabilidad cuántica</td><td>Números complejos, norma 2</td><td>Interferencia y medida</td><td><a href="@ch:interference">02</a></td></tr>
-    <tr><td>Observables</td><td>Teorema espectral, matrices hermíticas</td><td>Medida, incertidumbre</td><td><a href="@ch:measurement">03</a></td></tr>
-    <tr><td>Entrelazamiento</td><td>Producto tensorial, SVD</td><td>Correlaciones cuánticas, Bell</td><td><a href="@ch:entanglement">04</a></td></tr>
-    <tr><td>Puertas cuánticas</td><td>Matrices unitarias, grupos</td><td>Circuitos y universalidad</td><td><a href="@ch:circuits">05</a></td></tr>
-    <tr><td>Transformada cuántica de Fourier</td><td>Análisis de Fourier, raíces de la unidad</td><td>Periodos, estimación de fase</td><td><a href="@ch:fourier">06</a></td></tr>
-    <tr><td>Algoritmo de Shor</td><td>Teoría de números, fracciones continuas</td><td>Factorización</td><td><a href="@ch:shor">07</a></td></tr>
-    <tr><td>Algoritmo de Grover</td><td>Geometría plana, amplitudes</td><td>Búsqueda</td><td><a href="@ch:grover">08</a></td></tr>
-    <tr><td>Corrección de errores</td><td>Teoría de códigos, grupos estabilizadores</td><td>Qubits fiables</td><td><a href="@ch:error-correction">09</a></td></tr>
-    <tr><td>Decoherencia</td><td>Canales cuánticos, matrices densidad</td><td>Limitaciones del hardware</td><td><a href="@ch:error-correction">09</a></td></tr>
-  </tbody>
-</table>
-
-<h2>Cómo leer esta web</h2>
-
-<p>El peso está en la <strong>teoría matemática</strong>: cada capítulo enuncia sus resultados como teoremas, y la mayoría llevan su demostración, plegada para no interrumpir la lectura. El único requisito de verdad es el álgebra lineal (vectores, matrices, valores propios); la web hermana <a href="https://toniferr.github.io/math-of-ai/es/algebra-lineal/">Math of AI</a> le dedica un capítulo. Las figuras son interactivas y simulan los estados cuánticos de forma exacta en tu navegador, sin servidores ni rastreadores.</p>
-
-<p class="cta-row"><a class="cta primary" href="@ch:bits">Capítulo 00: De bits a vectores →</a></p>
+<section class="splash" data-demo="splash/bloch" aria-labelledby="splash-title">
+  <canvas class="splash-canvas"></canvas>
+  <div class="splash-copy">
+    <p class="splash-kicker">Las matemáticas de la computación cuántica</p>
+    <h1 id="splash-title" class="splash-title"><span class="splash-mark" aria-hidden="true">ψ</span>Math of Quantum <span class="splash-sub">¿Qué hace distinto a un ordenador cuántico?</span></h1>
+    <p class="splash-lead">No que «pruebe todas las respuestas a la vez»: hace interferir amplitudes complejas. Esta web construye la idea teorema a teorema, del bit clásico al algoritmo de Shor y la corrección de errores. Junto a este texto, un cúbit de verdad: aplícale puertas, mira cómo gira su fase y mídelo.</p>
+    <p class="cta-row"><a class="cta primary" href="@intro">Empezar el viaje →</a><a class="cta" href="@ch:bits">Primer capítulo</a><a class="cta" href="@timeline">Ver la línea temporal</a></p>
+    <p class="splash-hint">Arrastra la esfera para girarla; los botones de abajo son puertas cuánticas.</p>
+  </div>
+</section>

@@ -21,7 +21,8 @@ that simulate the quantum states exactly in the browser.
 | 08 | Grover's algorithm | Two reflections = rotation, optimal iterations, BBBV lower bound | Amplitudes, success curve, 2D plane |
 | 09 | Errors and decoherence | Kraus, discretization of errors, Knill–Laflamme, threshold theorem | Decoherence channels, repetition code |
 
-Plus a home page with a draggable qubit and a filterable timeline from Planck (1900) to today.
+Plus a title screen (a large Bloch sphere over an interference pattern: gates, precession and measurement), an
+introduction with a draggable qubit, and a filterable timeline from Planck (1900) to today.
 
 ## Principles
 
@@ -53,7 +54,8 @@ content/
 ├── site.json                  base URL, languages and chapter order
 ├── i18n/{en,es}.json          interface and interactive-figure strings (same keys in both)
 └── {en,es}/
-    ├── home.html              home page (<!--chain--> is replaced by the contents)
+    ├── home.html              title screen (js/demos/splash.js draws its figure)
+    ├── intro.html             introduction (<!--chain--> is replaced by the contents)
     ├── timeline.json          eras and events of the timeline
     └── chapters/<id>.html     one chapter: <!--meta {json} --> block + HTML with $TeX$
 src/
@@ -72,7 +74,7 @@ build.py                       generator → dist/ (English) and dist/es/ (Spani
 
 - Formulas: `$...$` inline and `$$...$$` for display. `\class{k1}{...}` colours a term (k1–k4), just like
   `<span class="k1">` in the text.
-- Internal links: `href="@ch:<id>#anchor"`, `href="@timeline"` and `href="@home"`.
+- Internal links: `href="@ch:<id>#anchor"`, `href="@timeline"`, `href="@intro"` and `href="@home"`.
 - Boxes: `<div class="theorem">`, `definition` or `idea`, with a `<span class="th-title">`; proofs go in
   `<details class="proof"><summary>…</summary><div>…</div></details>`.
 - Margin notes: `<aside class="note">`.
